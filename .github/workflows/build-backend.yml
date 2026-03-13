@@ -26,7 +26,7 @@ jobs:
           docker build \
           -t ${{ secrets.ACR_REGISTRY }}/aegis-backend:latest \
           -t ${{ secrets.ACR_REGISTRY }}/aegis-backend:${{ github.sha }} \
-          -f backend/Dockerfile ./backend
+          -f backend.Dockerfile .
 
       - name: Push Docker image
         run: |
