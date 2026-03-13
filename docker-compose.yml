@@ -1,0 +1,28 @@
+version: "3.9"
+
+services:
+
+  backend:
+    container_name: aegis_backend
+    build:
+      context: .
+      dockerfile: backend.Dockerfile
+    ports:
+      - "${BACKEND_PORT}:8000"
+    env_file:
+      - .env
+    restart: unless-stopped
+
+  frontend:
+    container_name: aegis_frontend
+    build:
+      context: .
+      dockerfile: frontend.Dockerfile
+      args:
+        VITE_API_URL: ${VITE_API_URL}
+        VITE_AZURE_MAPS_KEY: ${VITE_AZURE_MAPS_KEY}
+    ports:
+      - "${FRONTEND_PORT}:80"
+    depends_on:
+      - backend
+    restart: unless-stopped

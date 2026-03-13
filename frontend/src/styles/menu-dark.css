@@ -1,0 +1,31 @@
+/* Quitar fondo azul hover */
+.ant-menu-dark.ant-menu-horizontal > .ant-menu-item:hover {
+    background: transparent !important;
+    color: white !important;
+}
+
+/* Quitar fondo seleccionado */
+.ant-menu-dark.ant-menu-horizontal > .ant-menu-item-selected {
+    background: transparent !important;
+}
+
+/* Línea blanca al seleccionar */
+.ant-menu-dark.ant-menu-horizontal > .ant-menu-item-selected::after {
+    border-bottom: 2px solid white !important;
+}
+
+/* Línea blanca al hover */
+.ant-menu-dark.ant-menu-horizontal > .ant-menu-item:hover::after {
+    border-bottom: 2px solid white !important;
+}
+
+/* Transición suave */
+.ant-menu-dark.ant-menu-horizontal > .ant-menu-item {
+    transition: all 0.2s ease;
+}
+
+/*
+.ant-menu-horizontal > .ant-menu-item::after {
+  display: none !important;
+}
+  */

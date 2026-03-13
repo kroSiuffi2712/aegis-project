@@ -1,0 +1,27 @@
+# Python
+**/__pycache__
+**/*.pyc
+**/*.pyo
+**/*.pyd
+**/.env
+**/venv
+**/.pytest_cache
+
+# Node
+**/node_modules
+**/dist
+**/build
+
+# Static generated
+**/static
+
+# Git
+.git
+.gitignore
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+docker-compose.yml

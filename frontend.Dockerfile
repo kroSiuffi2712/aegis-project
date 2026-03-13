@@ -1,0 +1,28 @@
+FROM node:20 as build
+
+WORKDIR /app
+
+ARG VITE_API_URL
+ARG VITE_AZURE_MAPS_KEY
+
+ENV VITE_API_URL=$VITE_API_URL
+ENV VITE_AZURE_MAPS_KEY=$VITE_AZURE_MAPS_KEY
+
+COPY frontend/package*.json ./
+RUN npm install
+
+
+COPY frontend/ .
+
+
+RUN npm run build
+
+
+FROM nginx:alpine
+
+COPY --from=build /app/dist /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]

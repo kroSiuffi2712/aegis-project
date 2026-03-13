@@ -1,0 +1,17 @@
+/* Scroll para contenedores dark */
+.agents-scroll-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.agents-scroll-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.agents-scroll-container::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+}
+
+.agents-scroll-container::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.35);
+}

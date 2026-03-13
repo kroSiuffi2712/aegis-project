@@ -1,0 +1,33 @@
+.chat-welcome {
+  padding: 16px 0 24px 0;
+}
+
+.chat-welcome-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.chat-welcome-avatar {
+  background-color: #5b5fc7; 
+  font-weight: 600;
+}
+
+.chat-welcome-text {
+  font-size: 18px;
+  color: #555;
+}
+
+.chat-welcome-title {
+  margin: 0;
+  font-weight: 600;
+}
+
+.ant-list .ant-list-empty-text {
+    padding: 0;
+}
+.ant-input-affix-wrapper >input.ant-input {
+    padding: 0px;
+    margin-left: 8px;
+}

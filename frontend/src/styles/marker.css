@@ -1,0 +1,167 @@
+/* Reset Ant Design Button styles to behave like a plain container */
+.ant-btn.marker-container {
+  padding: 0 !important;
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  display: block !important;
+}
+
+/* Base marker container */
+.marker-container {
+  position: relative;
+  width: 80px;   /* 🔥 tamaño real del área de animación */
+  height: 80px;
+  cursor: pointer;
+}
+
+/* Central incident dot */
+.marker-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle at center,
+      rgba(255, 60, 60, 0.6) 0%,
+      rgba(220, 20, 20, 0.85) 60%,
+      rgba(120, 0, 0, 1) 100%);
+  z-index: 3;
+}
+
+/* Waves */
+.wave {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(255, 0, 0, 0.35);
+  transform: translate(-50%, -50%);
+  animation: radarWave 2.2s infinite;
+}
+
+.wave1 { animation-delay: 0s; }
+.wave2 { animation-delay: 0.7s; }
+.wave3 { animation-delay: 1.4s; }
+
+
+
+/* blue Central incident dot */
+.blue-marker-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle at center,
+      rgba(93, 135, 250, 0.6) 0%,
+      rgba(15, 73, 231, 0.85) 60%,
+      rgb(2, 30, 83) 100%);
+  z-index: 3;
+}
+
+/* blue Waves */
+.blue-wave {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(8, 83, 243, 0.35);
+  transform: translate(-50%, -50%);
+  animation: radarWave 2.2s infinite;
+}
+
+/* yellow Central incident dot */
+.yellow-marker-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle at center,
+      rgba(223, 220, 89, 0.6) 0%,
+      rgba(250, 247, 77, 0.85) 60%,
+      rgb(252, 235, 5) 100%);
+  z-index: 3;
+}
+
+/* yellow Waves */
+.yellow-wave {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgb(245, 221, 3);
+  transform: translate(-50%, -50%);
+  animation: radarWave 2.2s infinite;
+}
+
+/* yellow Central incident dot */
+.orange-marker-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle at center,
+      rgba(179, 100, 35, 0.6) 0%,
+      rgba(226, 134, 47, 0.85) 60%,
+      rgb(226, 111, 4) 100%);
+  z-index: 3;
+}
+
+/* yellow Waves */
+.orange-wave {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(245, 132, 2, 0.35);
+  transform: translate(-50%, -50%);
+  animation: radarWave 2.2s infinite;
+}
+
+@keyframes radarWave {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.6;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(4.5);
+    opacity: 0;
+  }
+}
+
+/*Azure Maker */
+.atlas-marker {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+.marker-container {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+}
+

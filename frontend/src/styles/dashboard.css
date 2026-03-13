@@ -1,0 +1,12 @@
+/* ===== Dashboard responsive wrap (WIDTH ONLY) ===== */
+@media (max-width: 1115px) {
+    .dashboard-left,
+    .dashboard-right {
+        width: 100% !important;
+        flex: 1 1 100% !important;
+    }
+
+    .dashboard-right {
+        order: 3; /* tables go to bottom */
+    }
+}

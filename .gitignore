@@ -1,0 +1,40 @@
+# =========================
+# Python / FastAPI
+# =========================
+venv/
+backend/venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.log
+.env
+
+# =========================
+# Node / React
+# =========================
+node_modules/
+frontend/node_modules/
+
+# Environment variables
+frontend/.env
+backend/.env
+.env.*
+
+# Build folders
+dist/
+build/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# =========================
+# Misc
+# =========================
+*.sqlite3
+*.db
