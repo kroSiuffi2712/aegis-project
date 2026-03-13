@@ -26,7 +26,7 @@ jobs:
           docker build \
           -t ${{ secrets.ACR_REGISTRY }}/aegis-frontend:latest \
           -t ${{ secrets.ACR_REGISTRY }}/aegis-frontend:${{ github.sha }} \
-          -f frontend/frontend.Dockerfile ./frontend
+          -f frontend.Dockerfile .
 
       - name: Push Docker image
         run: |
