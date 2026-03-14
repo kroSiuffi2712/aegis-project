@@ -31,6 +31,7 @@ class IncidentService:
         self.azure_maps_service = AzureMapsService()
         self.ambulance_service = AmbulanceService()
         self.decision_trace_service = DecisionTraceService()
+        self.orchestrator_service = OrchestratorService()
 
     # Serializer to avoid errors with ObjectId
     def serialize_incident(self, incident: dict):
@@ -578,3 +579,205 @@ class IncidentService:
             "status": updated_incident["status"],
             "closed_at": updated_incident["closed_at"],
         }
+    
+    async def create_incident_v2(self, payload):
+        db = get_database()
+
+        zone = await db["zones"].find_one({"_id": payload.zone_id})
+        if not zone:
+            raise Exception("Zone not found")
+
+        supervisor = await self.supervisor_service.assign_supervisor(zone)
+
+        code = self.generate_incident_code()
+
+        incident_data = {
+            "code": code,
+            "zone_id": payload.zone_id,
+            "severity": payload.severity,
+            "patient": payload.patient.dict(),
+            "symptoms_summary": payload.symptoms_summary,
+            "location": payload.location.dict(),
+            "risk_score": None,
+            "confidence": None,
+            "assigned_supervisor_id": supervisor["_id"],
+            "status": "pending",
+            "assigned_ambulance_id": None,
+            "assigned_clinic_id": None,
+            "estimated_distance": None,
+            "agent_decisions": [],
+            "governance": None,
+            "reliability": None,
+            "created_at": datetime.utcnow()
+        }
+
+        incident = await self.incident_repository.create_incident(incident_data)
+
+        # ===============================
+        # TRIAGE AGENT (AI CLASSIFICATION)
+        # ===============================
+
+        triage_result = None
+
+        try:
+            triage_result = await self.triage_agent.analyze(payload.symptoms_summary)
+
+            risk_score = self.triage_service.calculate_risk_score(triage_result)
+            triage_result["risk_score"] = risk_score
+
+            print("\n===== TRIAGE AGENT RESULT =====")
+            print(triage_result)
+            print("================================\n")
+
+        except Exception as e:
+            # No romper el flujo si el agente falla
+            triage_result = None
+
+
+        await db["zones"].update_one(
+            {"_id": payload.zone_id},
+            {"$inc": {"active_incidents": 1}}
+        )
+
+        # ===============================
+        # ORCHESTRATOR PROCESS
+        # ===============================
+        orchestrator = OrchestratorService()
+
+        incident_for_orchestrator = {
+            **incident,
+            "id": str(incident["_id"]),
+            "triage": triage_result
+        }
+
+        decision = await orchestrator.process_incident_v2(incident_for_orchestrator)
+
+        # ===============================
+        # ROUTE DATA FOR ETA INTELLIGENCE
+        # ===============================
+
+        route = decision.get("route", {})
+
+        route_metrics = route.get("route", {})
+
+        distance_meters = max(route_metrics.get("distance_meters", 1), 1)
+        travel_time_seconds = max(route_metrics.get("travel_time_seconds", 1), 1)
+
+        # si aún no usas tráfico real
+        traffic_delay_seconds = 0
+
+        print("\n===== ROUTE DATA USED FOR ETA =====")
+        print("distance_meters:", distance_meters)
+        print("travel_time_seconds:", travel_time_seconds)
+        print("traffic_delay_seconds:", traffic_delay_seconds)
+        print("===================================\n")
+        
+        route_intelligence = await self.azure_maps_service.get_route_intelligence(
+            distance_meters=distance_meters,
+            travel_time_seconds=travel_time_seconds,
+            traffic_delay_seconds=traffic_delay_seconds
+        )
+
+        traffic = route_intelligence.get("external_impact", {}).get("traffic_severity_percent", 0)
+        weather = route_intelligence.get("external_impact", {}).get("weather_impact_percent", 0)
+
+        eta = max(
+            route_intelligence.get("eta_intelligence", {}).get("ai_adjusted_eta_minutes", 1),
+            1
+        )
+
+        reliability_score = max(
+            decision.get("reliability", {}).get("decision_reliability_score", 0.8),
+            0.01
+        )
+
+        transport_risk_score = int(
+            (traffic * 0.4) +
+            (weather * 0.3) +
+            (eta * 2) +
+            ((1 - reliability_score) * 20)
+        )
+
+        if transport_risk_score < 35:
+            transport_risk_level = "LOW"
+        elif transport_risk_score < 65:
+            transport_risk_level = "MEDIUM"
+        else:
+            transport_risk_level = "HIGH"
+
+
+        assigned_ambulance_id = None
+        assigned_clinic_id = None
+
+        route = decision.get("route")
+
+        if route:
+            assigned_ambulance_id = route.get("ambulance_id")
+            assigned_clinic_id = route.get("clinic_id")
+
+        # ===============================
+        # UPDATE INCIDENT
+        # ===============================
+
+        updated_incident = await self.incident_repository.update_incident(
+            str(incident["_id"]),
+            {
+                "risk_score": decision["risk_score"],
+                "confidence": decision["confidence"],
+                "assigned_ambulance_id": assigned_ambulance_id,
+                "assigned_clinic_id": assigned_clinic_id,
+                "estimated_distance": distance_meters,
+                "status": "routed",
+                "route": decision["route"],
+                "optimized_routes": decision["optimized_routes"],
+                "transport_risk_level": transport_risk_level,
+                "agent_decisions": decision.get("agent_decisions", []),
+                "governance": decision.get("governance"),
+                "reliability": decision.get("reliability"),
+                "eta_intelligence": route_intelligence.get("eta_intelligence"),
+                "external_impact": route_intelligence.get("external_impact"),
+                "transport_projection": route_intelligence.get("transport_projection")
+            }
+        )
+
+        updated_incident = self.serialize_incident(updated_incident)
+
+        return {
+            "id": updated_incident["_id"],
+            "code": updated_incident["code"],
+            "zone_id": updated_incident["zone_id"],
+            "severity": updated_incident["severity"],
+            "risk_score": updated_incident.get("risk_score"),
+            "confidence": updated_incident.get("confidence"),
+            "assigned_supervisor_id": updated_incident["assigned_supervisor_id"],
+            "assigned_ambulance_id": updated_incident.get("assigned_ambulance_id"),
+            "patient": updated_incident["patient"],
+            "symptoms_summary": updated_incident["symptoms_summary"],
+            "location": updated_incident["location"],
+            "status": updated_incident["status"],
+            "assigned_clinic_id": updated_incident.get("assigned_clinic_id"),
+            "estimated_distance": updated_incident.get("estimated_distance"),
+            "eta_intelligence": updated_incident.get("eta_intelligence"),
+            "external_impact": updated_incident.get("external_impact"),
+            "transport_projection": updated_incident.get("transport_projection"),
+            "agent_decisions": updated_incident.get("agent_decisions", []),
+            "governance": updated_incident.get("governance"),
+            "reliability": updated_incident.get("reliability"),
+            "created_at": updated_incident["created_at"]
+        }
+
+        #--------------------------------------------------
+
+        #payload_dict = payload.model_dump()
+
+        #incident = await self.incident_repository.create(payload_dict)
+
+        #if "_id" in incident:
+        #    incident["id"] = incident.pop("_id")
+
+        #result = await self.orchestrator_service.process_incident_v2(incident)
+
+        #return {
+        #    "incident": incident,
+        #    "analysis": result
+        #}

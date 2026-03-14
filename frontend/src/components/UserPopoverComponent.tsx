@@ -2,12 +2,24 @@ import React from "react";
 import { Popover, Card, Typography, Avatar, Button, theme } from "antd";
 import { LogoutOutlined } from "@ant-design/icons";
 import { getInitialsString } from "@/utils/stringFunctions";
+import { useMsal } from "@azure/msal-react";
 
 const { Text } = Typography;
 const { useToken } = theme;
 
 const ChromeProfilePopover: React.FC = () => {
     const { token } = useToken();
+    const { accounts, instance } = useMsal();
+
+    const name = accounts[0]?.name || "";
+    const email = accounts[0]?.username || "";
+
+    const initials = name
+        .split(" ")
+        .map(n => n[0])
+        .join("")
+        .toUpperCase();
+
     const content = (
         <Card style={{ width: 250, borderRadius: 12, padding: 0, border: "none" }}>
             <div
@@ -19,16 +31,16 @@ const ChromeProfilePopover: React.FC = () => {
                     borderRadius: 12
                 }}
             >
-                <Avatar size={64}>{getInitialsString("Carolina Ruiz")}</Avatar>
+                <Avatar size={64}>{initials}</Avatar>
 
                 <div style={{ marginTop: 10 }}>
                     <Text strong style={{ fontSize: 16 }}>
-                        {"Carolina Ruiz"}
+                        {name}
                     </Text>
                 </div>
 
                 <div>
-                    <Text type="secondary">{"crsiuffi@gmail.com"}</Text>
+                    <Text type="secondary">{email}</Text>
                 </div>
             </div>
 
@@ -41,7 +53,11 @@ const ChromeProfilePopover: React.FC = () => {
                 style={{
                     marginTop: 12
                 }}
-                onClick={() => console.log("Logout")}
+                onClick={() => {
+                    instance.logoutRedirect({
+                        postLogoutRedirectUri: import.meta.env.VITE_APP_URL
+                    });
+                }}
             >
                 Cerrar sesión
             </Button>

@@ -89,3 +89,28 @@ class ClinicRepository:
             })
 
         return clinics
+    
+    # Get Clinics by Insurance
+    async def get_by_insurance(self, insurance_id: str):
+
+        collection = self.get_collection()
+
+        cursor = collection.find({
+            "insurance_ids": insurance_id,
+            "active": True
+        })
+
+        clinics = []
+
+        async for clinic in cursor:
+
+            clinics.append({
+                "id": clinic["_id"],
+                "nit": clinic.get("nit"),
+                "name": clinic.get("name"),
+                "location": self._from_geojson_point(clinic.get("location")),
+                "active": clinic.get("active", True),
+                "created_at": clinic.get("created_at")
+            })
+
+        return clinics

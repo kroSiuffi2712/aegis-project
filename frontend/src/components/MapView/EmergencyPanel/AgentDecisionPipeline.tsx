@@ -37,7 +37,7 @@ const AgentDecisionPipeline: React.FC<Props> = ({ data = [] }) => {
             key: "decision",
             alignText: "center",
             render: (text: string) => (
-                <Text ellipsis={{ tooltip: text }} style={{ color: "#d4d4d4", maxWidth: 150, textAlign: "center" }}>
+                <Text ellipsis={{ tooltip: text }} style={{ color: "#d4d4d4", maxWidth: 500, textAlign: "center" }}>
                     {text}
                 </Text>
             ),

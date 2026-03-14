@@ -3,17 +3,20 @@ import { DashboardOutlined, LogoutOutlined } from "@ant-design/icons";
 import { Ambulance, Radar, UserRoundPen } from "lucide-react";
 import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
+import { useMsal } from "@azure/msal-react";
 
 export interface MenuItem {
     key: string;
     label: string;
     icon?: ReactNode;
     onClick?: () => void;
-    type?: "group"; 
-    children?: MenuItem[]; 
+    type?: "group";
+    children?: MenuItem[];
 }
 
 const useSider = () => {
+    const { instance } = useMsal();
+
     const menuItems: MenuProps["items"] = [
         {
             key: "map",
@@ -22,7 +25,7 @@ const useSider = () => {
         },
         {
             key: "agents",
-            icon: <DashboardOutlined style={{ fontSize: 24 }}/>,
+            icon: <DashboardOutlined style={{ fontSize: 24 }} />,
             label: <Link to="/agents">AI Decision Center</Link>
         },
         {
@@ -39,7 +42,11 @@ const useSider = () => {
             key: "Logout",
             icon: <LogoutOutlined />,
             label: "Logout",
-            onClick: () => console.log("Logout clicked")
+            onClick: () => {
+                instance.logoutRedirect({
+                    postLogoutRedirectUri: import.meta.env.VITE_APP_URL
+                });
+            }
         }
     ];
 

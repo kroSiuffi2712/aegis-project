@@ -4,6 +4,16 @@ from app.core.database import get_database
 
 class ObservabilityService:
 
+    def serialize_datetimes(self, obj):
+        if isinstance(obj, dict):
+            return {k: self.serialize_datetimes(v) for k, v in obj.items()}
+        elif isinstance(obj, list):
+            return [self.serialize_datetimes(v) for v in obj]
+        elif isinstance(obj, datetime):
+            return obj.isoformat()
+        return obj
+
+
     async def get_ai_observability_logs(self, incident_id: str):
 
         azure_raw_logs = [
@@ -111,10 +121,10 @@ class ObservabilityService:
         }
 
         if factors:
-            log["factors"] = factors
+            log["factors"] = self.serialize_datetimes(factors)
 
         if critical_metrics:
-            log["critical_metrics"] = critical_metrics
+            log["critical_metrics"] = self.serialize_datetimes(critical_metrics)
 
         agent_logs.append(log)
 

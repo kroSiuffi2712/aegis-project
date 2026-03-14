@@ -89,7 +89,7 @@ export interface Incident {
     eta_intelligence?: EtaIntelligence;
     external_impact?: ExternalImpact;
     transport_projection?: TransportProjection;
-    route: Route;
+    route: {route:Route};
     created_at: string;
     closed_at: string | null;
 }

@@ -13,7 +13,7 @@ class AmbulanceRepository:
         db = get_database()
         return db[self.collection_name]
 
-    # 🔹 Create
+    # Create
     async def create_ambulance(self, ambulance_data: dict):
         collection = self.get_collection()
 
@@ -102,7 +102,7 @@ class AmbulanceRepository:
 
         cursor = collection.find(
             {
-                "status": "AVAILABLE"
+                "status": "available"
             },
             {
                 "_id": 1,
@@ -117,11 +117,17 @@ class AmbulanceRepository:
 
         async for doc in cursor:
 
+            location = doc.get("location", {})
+            coords = location.get("coordinates", [])
+
+            lon = coords[0] if len(coords) > 0 else None
+            lat = coords[1] if len(coords) > 1 else None
+
             results.append({
                 "id": doc["_id"],
                 "status": doc.get("status"),
-                "lat": doc["location"]["lat"],
-                "lon": doc["location"]["lon"],
+                "lat": lat,
+                "lon": lon,
                 "clinic_id": doc.get("clinic_id"),
                 "zone_id": doc.get("zone_id")
             })

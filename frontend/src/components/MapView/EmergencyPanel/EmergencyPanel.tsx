@@ -70,7 +70,7 @@ const EmergencyPanel: React.FC<Props> = ({ incident, openEmergencyDrawer, setOpe
                             stabilizationRate: Math.round(
                                 ((incident.transport_projection?.adjusted_score ?? 0) / (incident.transport_projection?.baseline_score ?? 1)) * 100
                             ),
-                            distanceKm: incident?.route?.distance_meters ? parseFloat((incident.route.distance_meters / 1000).toFixed(1)) : 0,
+                            distanceKm: incident?.route?.route.distance_meters ? parseFloat((incident.route.route.distance_meters / 1000).toFixed(1)) : 0,
                             baselineEta: incident.transport_projection?.baseline_score ?? 0,
                             adjustedEta: incident.transport_projection?.adjusted_score ?? 0,
                             trafficIndex: incident.external_impact?.traffic_severity_percent ?? 0,
@@ -117,7 +117,7 @@ const EmergencyPanel: React.FC<Props> = ({ incident, openEmergencyDrawer, setOpe
                             zIndex: 20
                         }}
                     >
-                        <Spin size="large" tip="Loading AI analytics..." />
+                        <Spin size="large" tip="Loading Incident Centric View ..." />
                     </div>
                 )}
 

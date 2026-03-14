@@ -14,12 +14,23 @@ import "azure-maps-control/dist/atlas.min.css";
 import AppRouter from "./routes/AppRouter.tsx";
 import { QueryProvider } from "./providers/QueryProvider.tsx";
 
+import { PublicClientApplication } from "@azure/msal-browser";
+import { MsalProvider } from "@azure/msal-react";
+import { msalConfig } from "./config/authConfig.ts";
+import AuthGate from "./auth/AuthGate.tsx";
+
+const msalInstance = new PublicClientApplication(msalConfig);
+
 createRoot(document.getElementById("root")!).render(
     <StrictMode>
-        <QueryProvider>
-            <I18nextProvider i18n={i18next}>
-                <AppRouter />
-            </I18nextProvider>
-        </QueryProvider>
+        <MsalProvider instance={msalInstance}>
+            <QueryProvider>
+                <I18nextProvider i18n={i18next}>
+                    <AuthGate>
+                        <AppRouter />
+                    </AuthGate>
+                </I18nextProvider>
+            </QueryProvider>
+        </MsalProvider>
     </StrictMode>
 );

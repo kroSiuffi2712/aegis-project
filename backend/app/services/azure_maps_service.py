@@ -10,23 +10,15 @@ class AzureMapsService:
 
     async def get_route(self, origin_lat, origin_lng, dest_lat, dest_lng):
 
-        origins = [
-            [origin_lng, origin_lat]
-        ]
-
-        destination = [
-            [dest_lng, dest_lat]
-        ]
-
-        routes = await self.client.distance_matrix(
-            origins,
-            destination
+        route = await self.client.get_route_directions(
+            origin_lat,
+            origin_lng,
+            dest_lat,
+            dest_lng
         )
 
-        if not routes:
+        if not route:
             raise Exception("No route returned from Azure Maps")
-
-        route = routes[0]
 
         distance_km = round(route["distance_meters"] / 1000, 2)
         eta_minutes = int(route["travel_time_seconds"] / 60)
@@ -34,6 +26,10 @@ class AzureMapsService:
         return {
             "distance_km": distance_km,
             "eta_minutes": eta_minutes,
+            "traffic_delay_minutes": int(route["traffic_delay_seconds"] / 60),
+            "distance_meters": route["distance_meters"],
+            "travel_time_seconds": route["travel_time_seconds"],
+            "traffic_delay_seconds": route["traffic_delay_seconds"],
             "origin": {
                 "lat": origin_lat,
                 "lng": origin_lng
@@ -51,59 +47,55 @@ class AzureMapsService:
         traffic_delay_seconds: int
     ):
 
-        distance_km = round(distance_meters / 1000, 1)
+        distance_km = round(distance_meters / 1000, 2)
 
-        baseline_eta = (
-            travel_time_seconds - traffic_delay_seconds
-        ) / 60
+        # SAFE DEFAULTS
+        weather_percent = 10
+        traffic_percent = 0
 
+        baseline_seconds = max(travel_time_seconds - traffic_delay_seconds, 1)
+
+        baseline_eta = baseline_seconds / 60
         adjusted_eta = travel_time_seconds / 60
 
-        traffic_severity = (
-            traffic_delay_seconds / travel_time_seconds
-        )
+        if travel_time_seconds > 0:
+            traffic_severity = traffic_delay_seconds / travel_time_seconds
+            traffic_percent = int(traffic_severity * 100)
 
-        weather_impact = random.uniform(0.1, 0.6)
+        baseline_score = int(round(baseline_eta))
+        adjusted_score = int(round(adjusted_eta))
 
-        baseline_score = 70
+        midpoint = int(adjusted_score / 2)
 
-        adjusted_score = int(
-            baseline_score
-            - (traffic_severity * 20)
-            - (weather_impact * 10)
-        )
-
-        adjusted_score = max(adjusted_score, 0)
-
-        impact_delta = baseline_score - adjusted_score
+        progression_factor = max(1, int(distance_km / 5))
 
         timeline = [
             {
                 "minute": 0,
                 "baseline": baseline_score,
-                "adjusted": baseline_score
-            },
-            {
-                "minute": 3,
-                "baseline": int(baseline_score * 1.15),
-                "adjusted": baseline_score - int(impact_delta * 0.5)
-            },
-            {
-                "minute": 6,
-                "baseline": int(baseline_score * 1.30),
                 "adjusted": adjusted_score
+            },
+            {
+                "minute": midpoint,
+                "baseline": baseline_score + progression_factor,
+                "adjusted": adjusted_score + progression_factor * 2
+            },
+            {
+                "minute": adjusted_score,
+                "baseline": baseline_score + progression_factor * 2,
+                "adjusted": adjusted_score + progression_factor * 3
             }
         ]
 
         return {
             "eta_intelligence": {
-                "baseline_eta_minutes": round(baseline_eta),
-                "ai_adjusted_eta_minutes": round(adjusted_eta),
+                "baseline_eta_minutes": baseline_score,
+                "ai_adjusted_eta_minutes": adjusted_score,
                 "distance_km": distance_km,
             },
             "external_impact": {
-                "traffic_severity_percent": int(traffic_severity * 100),
-                "weather_impact_percent": int(weather_impact * 100),
+                "traffic_severity_percent": traffic_percent,
+                "weather_impact_percent": weather_percent,
             },
             "transport_projection": {
                 "baseline_score": baseline_score,
@@ -271,4 +263,77 @@ class AzureMapsService:
             },
 
             "risk_score": risk_score
+        }
+
+    async def get_dispatch_intelligence(
+        self,
+        patient_lat: float,
+        patient_lng: float,
+        ambulances: list,
+        clinics: list
+    ):
+
+        ambulance_data = []
+
+        for amb in ambulances:
+
+            route = await self.get_route(
+                amb["lat"],
+                amb["lng"],
+                patient_lat,
+                patient_lng
+            )
+
+            traffic = await self.get_traffic(
+                amb["lat"],
+                amb["lng"]
+            )
+
+            ambulance_data.append({
+                "id": amb["id"],
+                "lat": amb["lat"],
+                "lng": amb["lng"],
+                "distance_km": route["distance_km"],
+                "eta_minutes": route["eta_minutes"],
+                "traffic_speed": traffic["current_speed"],
+                "free_flow_speed": traffic["free_flow_speed"]
+            })
+
+        clinic_data = []
+
+        print("\n===== CLINICS RECEIVED IN MAP SERVICE =====")
+        for c in clinics:
+            print(c)
+
+        for clinic in clinics:
+
+            location = clinic.get("location")
+
+            if not location:
+                continue
+
+            clinic_lat = location.get("lat")
+            clinic_lng = location.get("lng")
+
+            if clinic_lat is None or clinic_lng is None:
+                continue
+
+            route = await self.get_route(
+                patient_lat,
+                patient_lng,
+                clinic_lat,
+                clinic_lng
+            )
+
+            clinic_data.append({
+                "id": clinic["id"],
+                "lat": clinic_lat,
+                "lng": clinic_lng,
+                "distance_km": route["distance_km"],
+                "eta_minutes": route["eta_minutes"]
+            })
+
+        return {
+            "ambulances": ambulance_data,
+            "clinics": clinic_data
         }

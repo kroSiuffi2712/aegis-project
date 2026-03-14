@@ -1,15 +1,18 @@
 from fastapi import APIRouter, HTTPException, Query
 from app.services.incident_service import IncidentService
+from app.services.orchestrator_service import OrchestratorService
 from app.services.assessment_service import AIAssessmentService
 from app.schemas.incident_schema import IncidentCreate, DecisionTraceResponse
 from app.schemas.incident_analytics_schema import IncidentAnalyticsResponse
 from app.schemas.assessment_schema import AIAssessmentResponse
 from app.schemas.agent_trace_schema import AgentTraceResponse
 
+from fastapi.encoders import jsonable_encoder
+
 router = APIRouter(prefix="/incidents", tags=["Incidents"])
 incident_service = IncidentService()
 assessment_service = AIAssessmentService()
-
+orchestrator_service = OrchestratorService()
 
 @router.post("/")
 async def create_incident(payload: IncidentCreate):
@@ -92,5 +95,16 @@ async def get_decision_trace(incident_id: str):
 async def get_ai_assessment(incident_id: str):
     try:
         return await assessment_service.get_ai_assessment(incident_id)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@router.post("/incidents/test-v2")
+async def create_incident_test_v2(payload: IncidentCreate):
+
+    try:
+
+        result = await incident_service.create_incident_v2(payload)
+        return jsonable_encoder(result)
+
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))

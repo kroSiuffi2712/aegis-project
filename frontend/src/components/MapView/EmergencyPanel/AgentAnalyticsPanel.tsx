@@ -19,13 +19,13 @@ const getColumns = (bestScore: number) => [
         title: "ETA Patient",
         dataIndex: "eta_to_patient",
         key: "eta_to_patient",
-        render: (seconds: number) => `${Math.round(seconds / 60)} min`
+        render: (value: number) => `${value} min`
     },
     {
         title: "ETA Clinic",
         dataIndex: "eta_to_clinic",
         key: "eta_to_clinic",
-        render: (seconds: number) => `${Math.round(seconds / 60)} min`
+        render: (value: number) => `${value} min`
     },
     {
         title: "Efficiency",

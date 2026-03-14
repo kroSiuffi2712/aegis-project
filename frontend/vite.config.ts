@@ -16,6 +16,7 @@ export default defineConfig({
         }
     },
     server: {
+        port: 3000, //Borrar cuando se suba
         proxy: {
             "/realtime": {
                 target: "ws://localhost:8765",
