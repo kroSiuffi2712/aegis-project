@@ -1,0 +1,33 @@
+name: Build and Push Backend Image
+
+on:
+  workflow_dispatch:
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Login to ACR
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ secrets.ACR_REGISTRY }}
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+
+      - name: Build Docker image
+        run: |
+          docker build \
+          -t ${{ secrets.ACR_REGISTRY }}/aegis-backend:latest \
+          -t ${{ secrets.ACR_REGISTRY }}/aegis-backend:${{ github.sha }} \
+          -f backend.Dockerfile .
+
+      - name: Push Docker image
+        run: |
+          docker push ${{ secrets.ACR_REGISTRY }}/aegis-backend --all-tags
