@@ -4,6 +4,15 @@
 
 <img src="frontend/src/assets/pitch/aegis_logo.png" alt="AEGIS Logo" width="120" />
 
+<p>
+  <a href="https://www.microsoft.com/">
+    <img src="https://cdn.simpleicons.org/microsoft/ffffff" alt="Microsoft Logo" width="42" />
+  </a>
+  <a href="https://azure.microsoft.com/">
+    <img src="https://cdn.simpleicons.org/microsoftazure/0078D4" alt="Azure Logo" width="42" />
+  </a>
+</p>
+
 ## A cloud-native multi-agent AI Orchestrator platform to optimize real-time emergency response
 
 AEGIS is a cloud-native multi-agent AI orchestrator platform for dispatch, routing, patient triage, and decision support in real time.
@@ -49,7 +58,7 @@ AEGIS is a cloud-native multi-agent AI orchestrator platform for dispatch, routi
 
 <p>
   <a href="https://www.microsoft.com/">
-    <img src="https://img.shields.io/badge/Microsoft-Cloud%20Partner-5E5E5E?style=for-the-badge&logo=microsoft&logoColor=white" alt="Microsoft" />
+    <img src="https://img.shields.io/badge/Microsoft-Cloud%20Partner-5E5E5E?style=for-the-badge&logo=windows&logoColor=white" alt="Microsoft" />
   </a>
   <a href="https://azure.microsoft.com/">
     <img src="https://img.shields.io/badge/Azure-Innovation%20Challenge-0078D4?style=for-the-badge&logo=microsoftazure&logoColor=white" alt="Azure Innovation Challenge" />
