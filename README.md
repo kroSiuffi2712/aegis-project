@@ -21,14 +21,30 @@ AEGIS is a cloud-native multi-agent AI orchestrator platform for dispatch, routi
 </p>
 
 <p>
-  <img src="https://img.shields.io/badge/FastAPI-Backend-009688?style=for-the-badge&logo=fastapi&logoColor=white" alt="FastAPI" />
-  <img src="https://img.shields.io/badge/React-Frontend-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React" />
-  <img src="https://img.shields.io/badge/Microsoft-Agent%20Framework-00A4EF?style=for-the-badge&logo=microsoft&logoColor=white" alt="Microsoft Agent Framework" />
-  <img src="https://img.shields.io/badge/Vite-Build-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite" />
-  <img src="https://img.shields.io/badge/MongoDB-Cosmos%20Compatible-47A248?style=for-the-badge&logo=mongodb&logoColor=white" alt="MongoDB" />
-  <img src="https://img.shields.io/badge/Azure-Maps%20%7C%20Search%20%7C%20AD-0078D4?style=for-the-badge&logo=microsoftazure&logoColor=white" alt="Azure" />
-  <img src="https://img.shields.io/badge/OpenAI-Semantic%20Kernel-412991?style=for-the-badge&logo=openai&logoColor=white" alt="OpenAI" />
-  <img src="https://img.shields.io/badge/Docker-Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker" />
+  <a href="https://fastapi.tiangolo.com/">
+    <img src="https://img.shields.io/badge/FastAPI-Backend-009688?style=for-the-badge&logo=fastapi&logoColor=white" alt="FastAPI" />
+  </a>
+  <a href="https://react.dev/">
+    <img src="https://img.shields.io/badge/React-Frontend-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React" />
+  </a>
+  <a href="https://learn.microsoft.com/en-us/agent-framework/">
+    <img src="https://img.shields.io/badge/Microsoft-Agent%20Framework-00A4EF?style=for-the-badge&logo=microsoft&logoColor=white" alt="Microsoft Agent Framework" />
+  </a>
+  <a href="https://vite.dev/">
+    <img src="https://img.shields.io/badge/Vite-Build-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite" />
+  </a>
+  <a href="https://www.mongodb.com/">
+    <img src="https://img.shields.io/badge/MongoDB-Cosmos%20Compatible-47A248?style=for-the-badge&logo=mongodb&logoColor=white" alt="MongoDB" />
+  </a>
+  <a href="https://azure.microsoft.com/en-us/products/ai-services/openai-service/">
+    <img src="https://img.shields.io/badge/Azure-OpenAI-0078D4?style=for-the-badge&logo=microsoftazure&logoColor=white" alt="Azure OpenAI" />
+  </a>
+  <a href="https://learn.microsoft.com/en-us/semantic-kernel/">
+    <img src="https://img.shields.io/badge/Semantic-Kernel-412991?style=for-the-badge&logo=microsoft&logoColor=white" alt="Semantic Kernel" />
+  </a>
+  <a href="https://www.docker.com/">
+    <img src="https://img.shields.io/badge/Docker-Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker" />
+  </a>
 </p>
 
 <p>
