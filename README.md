@@ -304,6 +304,12 @@ Visible endpoint groups from the main API entrypoint:
 
 ```text
 aegis-project/
+|- docs/
+|  `- architecture/
+|     |- aegis-data-integrations.eraser
+|     |- aegis-deployment-architecture.eraser
+|     |- aegis-intelligent-flow.eraser
+|     `- aegis-security-observability.eraser
 |- backend/
 |  |- app/
 |  |  |- agents/
@@ -320,6 +326,7 @@ aegis-project/
 |  |- public/
 |  |- src/
 |  |  |- assets/
+|  |  |  `- pitch/
 |  |  |- auth/
 |  |  |- components/
 |  |  |- config/
