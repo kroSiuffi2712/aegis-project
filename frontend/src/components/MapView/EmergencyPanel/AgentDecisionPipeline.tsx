@@ -99,7 +99,7 @@ const AgentDecisionPipeline: React.FC<Props> = ({ data = [] }) => {
             </Typography.Text>
             <div
                 style={{
-                    maxHeight: 220,
+                    maxHeight: 125,
                     overflowY: "auto",
                     paddingTop: 3
                 }}
