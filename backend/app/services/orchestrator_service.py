@@ -3,6 +3,7 @@ from datetime import datetime
 import time
 from fastapi import HTTPException
 import traceback
+import math
 
 from app.ai.rag_service import RAGService
 from app.services.agents.risk_agent import RiskAgent
@@ -23,6 +24,7 @@ from app.services.azure_maps_service import AzureMapsService
 from app.repositories.insurance_repository import InsuranceRepository
 from app.agents.dispatch_agent import DispatchAgent
 from app.agents.transport_risk_agent import TransportRiskAgent
+from app.agents.strategy_agent import ResponseStrategyAgent
 
 
 class OrchestratorService:
@@ -43,6 +45,7 @@ class OrchestratorService:
         self.insurance_repository = InsuranceRepository()
         self.dispatch_agent = DispatchAgent()
         self.transport_risk_agent = TransportRiskAgent()
+        self.strategy_agent = ResponseStrategyAgent()
 
     async def generate_optimized_routes(self, incident: dict):
 
@@ -496,6 +499,61 @@ class OrchestratorService:
         )
 
         # ----------------------------
+        # RESPONSE STRATEGY AGENT
+        # ----------------------------
+
+        start_strategy = time.time()
+
+        available_resources = {
+            "ambulances_available": 1,
+            "special_units_available": []
+        }
+
+        strategy_result = await self.strategy_agent.plan_response(
+            incident,
+            triage_result,
+            available_resources
+        )
+
+        #-------------------------------------------------------------
+        victim_count = incident.get("victim_count", 1)
+
+        units_from_strategy = strategy_result.get("recommended_units", 1)
+
+        # ambulancia transporta 2 pacientes
+        units_by_victims = math.ceil(victim_count / 2)
+
+        # limite operativo del sistema
+        MAX_AMBULANCES = 3
+
+        recommended_units = min(
+            max(units_from_strategy, units_by_victims),
+            MAX_AMBULANCES
+        )
+
+        capacity_limited = victim_count > 6
+
+        capacity_note = None
+
+        if capacity_limited:
+            capacity_note = (
+                f"Incident reported {victim_count} victims. "
+                "System dispatch limited to 3 ambulances (maximum capacity)."
+            )
+        #-------------------------------------------------------------
+
+        strategy_latency = round((time.time() - start_strategy) * 1000, 2)
+
+        await self.observability_service.log_agent_decision(
+            agent_logs=agent_logs,
+            agent_name="ResponseStrategyAgent",
+            stage="strategy",
+            decision=f"Response priority {strategy_result.get('response_priority')} with {strategy_result.get('recommended_units')} unit(s)",
+            confidence=strategy_result.get("confidence", 0.8),
+            latency_ms=strategy_latency
+        )
+
+        # ----------------------------
         # DISPATCH
         # ----------------------------
 
@@ -674,6 +732,15 @@ class OrchestratorService:
             else:
                 transport_risk_level = "HIGH"
 
+            await self.observability_service.log_agent_decision(
+                agent_logs=agent_logs,
+                agent_name="TransportRiskAgent",
+                stage="transport_risk",
+                decision=f"Transport risk evaluated: {transport_risk_level}",
+                confidence=transport_risk_ai.get("confidence", 0.75),
+                latency_ms=transport_risk_ai.get("latency_ms", 0)
+            )
+
         total_latency = round((time.time() - start_total) * 1000, 2)
 
         reliability = {
@@ -718,6 +785,7 @@ class OrchestratorService:
             "reliability": reliability,
             "route": best_route,
             "optimized_routes": optimized_routes,
+            "response_strategy": strategy_result,
             "eta_intelligence": route_intelligence.get("eta_intelligence"),
             "external_impact": route_intelligence.get("external_impact"),
             "transport_risk_level": transport_risk_level,

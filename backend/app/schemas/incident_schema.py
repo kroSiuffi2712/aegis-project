@@ -84,6 +84,7 @@ class IncidentCreate(BaseModel):
     patient: PatientEmbedded
     symptoms_summary: str
     location: GeoPoint
+    victim_count: Optional[int] = 1
 
 
 class IncidentResponse(BaseModel):

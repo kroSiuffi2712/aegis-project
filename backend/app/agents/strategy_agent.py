@@ -13,23 +13,27 @@ class ResponseStrategyAgent:
 You are an Emergency Medical Response Strategy AI.
 
 Your task is to determine the optimal operational response strategy
-for an emergency incident based on the medical triage assessment
-and the available emergency resources.
+for an emergency incident based on the medical triage assessment,
+the number of victims involved, and the available emergency resources.
 
 ------------------------
 INCIDENT
 ------------------------
-{json.dumps(incident, indent=2)}
+{json.dumps(incident, indent=2, default=str)}
+
+NOTE:
+The incident may include a field called "victim_count" representing
+the number of patients or victims involved in the emergency.
 
 ------------------------
 TRIAGE RESULT
 ------------------------
-{json.dumps(triage_result, indent=2)}
+{json.dumps(triage_result, indent=2, default=str)}
 
 ------------------------
 AVAILABLE RESOURCES
 ------------------------
-{json.dumps(available_resources, indent=2)}
+{json.dumps(available_resources, indent=2, default=str)}
 
 ------------------------
 RESPONSE STRATEGY RULES
@@ -50,6 +54,19 @@ Standard ambulance dispatch.
 Criticality Level 4:
 Non urgent condition.
 Low priority dispatch.
+
+MULTI-VICTIM RULE:
+
+If victim_count > 1 consider recommending multiple ambulance units.
+
+Examples:
+- 1 victim → normally 1 ambulance
+- 2–3 victims → consider 2 ambulances
+- 4+ victims → consider multiple units or specialized response
+
+Never recommend more units than necessary.
+
+Also consider available resources when recommending units.
 
 ------------------------
 TASK

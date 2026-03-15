@@ -601,6 +601,7 @@ class IncidentService:
             "patient": payload.patient.dict(),
             "symptoms_summary": payload.symptoms_summary,
             "location": payload.location.dict(),
+            "victim_count": payload.victim_count,
             "risk_score": None,
             "confidence": None,
             "assigned_supervisor_id": supervisor["_id"],
