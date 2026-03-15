@@ -1,9 +1,10 @@
-from pydantic import BaseModel
-from typing import List
+from pydantic import BaseModel, ConfigDict
+from typing import List, Dict, Optional, Any
 
 
 class AgentDecisionStep(BaseModel):
     agent_name: str
+    agent_type: Optional[str] = None
     decision: str
     confidence: float
     latency_ms: float
@@ -14,6 +15,8 @@ class DecisionResponse(BaseModel):
     confidence:int
 
 class AgentTraceResponse(BaseModel):
+    model_config = ConfigDict(protected_namespaces=())
+
     model_version: str
     inference_mode: str
     decision_stability_trend: List[DecisionResponse]
