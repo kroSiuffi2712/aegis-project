@@ -554,6 +554,24 @@ class OrchestratorService:
         )
 
         # ----------------------------
+        # CAPACITY LIMIT LOG
+        # ----------------------------
+
+        if capacity_limited:
+
+            await self.observability_service.log_agent_decision(
+                agent_logs=agent_logs,
+                agent_name="SystemCapacityGuard",
+                stage="dispatch_capacity",
+                decision=(
+                    f"Incident reported {victim_count} victims. "
+                    "Dispatch limited to 3 ambulances (maximum system capacity)."
+                ),
+                confidence=1.0,
+                latency_ms=0
+            )
+
+        # ----------------------------
         # DISPATCH
         # ----------------------------
 
