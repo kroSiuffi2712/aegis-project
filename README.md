@@ -31,6 +31,16 @@ AEGIS is an intelligent emergency operations platform for dispatch, routing, pat
   <a href="frontend/src/assets/pitch/Generaci%C3%B3n_de_Video_de_Introducci%C3%B3n_IA.mp4">Watch Product Demo</a>
 </p>
 
+<p>
+  <a href="frontend/src/assets/pitch/AEGIS_Mission_Control.pdf">
+    <img src="https://img.shields.io/badge/Open-AEGIS%20Mission%20Control%20PDF-00C2A8?style=for-the-badge&logo=adobeacrobatreader&logoColor=white" alt="Open AEGIS Mission Control PDF" />
+  </a>
+</p>
+
+<p>
+  <strong>Featured Document:</strong> Mission Control executive brief with architecture, product narrative, and demo storyline.
+</p>
+
 </div>
 
 ## Product Preview
