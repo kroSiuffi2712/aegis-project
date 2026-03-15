@@ -232,7 +232,7 @@ const EmergencyPatientPanel: React.FC<Props> = ({ patient, incidentId }) => {
                         textAlign: "center"
                     }}
                 >
-                    AI Risk Escalation Projection
+                    Risk Escalation Projection
                 </Title>
 
                 <div style={{ height: 220 }}>
