@@ -41,15 +41,104 @@ AEGIS is an intelligent emergency operations platform for dispatch, routing, pat
 
 ## Product Gallery
 
-<div align="center">
-  <img src="frontend/src/assets/pitch/Aegis-img1.PNG" alt="AEGIS Main Map" width="48%" />
-  <img src="frontend/src/assets/pitch/Aegis-AIDecisionCenter.PNG" alt="AEGIS AI Decision Center" width="48%" />
-</div>
+### 1) Real-Time Operations Map
 
 <div align="center">
-  <img src="frontend/src/assets/pitch/Aegis-IncidentCentricView-Analytic.PNG" alt="Incident Centric Analytics" width="48%" />
-  <img src="frontend/src/assets/pitch/Aegis-IncidentCentricView-Chat.PNG" alt="Incident Centric Chat" width="48%" />
+  <img src="frontend/src/assets/pitch/Aegis-img1.PNG" alt="AEGIS Main Map" width="100%" />
 </div>
+
+Esta vista es el centro operativo principal. Sobre Azure Maps, el sistema pinta incidentes y ambulancias en tiempo real y permite abrir el Incident Centric View al seleccionar un caso.
+
+Que hace en la practica:
+
+- Carga incidentes desde `useIncidents` y ambulancias desde `useAmbulances`.
+- Renderiza marcadores de incidentes y unidades con hooks dedicados.
+- Vincula la seleccion de un incidente con el drawer de analitica y decision operativa.
+
+### 2) AI Decision Center
+
+<div align="center">
+  <img src="frontend/src/assets/pitch/Aegis-AIDecisionCenter.PNG" alt="AEGIS AI Decision Center" width="100%" />
+</div>
+
+Este modulo concentra supervision de decisiones IA para cada incidente. Combina vista lateral de casos con KPIs de confiabilidad, latencia total, riesgo operativo y pipeline de ejecucion de agentes.
+
+Que destaca:
+
+- Sidebar de incidentes para cambiar contexto sin salir del dashboard.
+- Tarjetas de calidad de decision (reliability, confidence variance, latency).
+- Panel de governance y pipeline completo de decisiones por agente.
+
+### 3) Incident Centric View - AI Route Intelligence (Analytics)
+
+<div align="center">
+  <img src="frontend/src/assets/pitch/Aegis-IncidentCentricView-Analytic.PNG" alt="Incident Centric Analytics" width="100%" />
+</div>
+
+Este panel muestra inteligencia de ruteo para despacho: proyeccion de riesgo, tabla de rutas optimizadas, score de riesgo y desglose de factores que impactan la respuesta.
+
+Incluye:
+
+- Risk Projection con tendencia y prediccion por segmento.
+- Optimized Routes con comparacion de ETA a paciente y clinica.
+- Predictive Signals de trafico, demoras y probabilidad operacional.
+- Risk Breakdown en barras para explicar por que una ruta es mas riesgosa.
+
+### 4) Incident Centric View - Agent Trace
+
+<div align="center">
+  <img src="frontend/src/assets/pitch/Aegis-IncidentCentricView-Agent.PNG" alt="Incident Centric Agent Trace" width="100%" />
+</div>
+
+Esta pantalla aterriza el comportamiento del agente en trazas auditables: tiempo total de analisis, confianza de decision, estabilidad temporal y bitacora de acciones con latencia por paso.
+
+Valor operativo:
+
+- Facilita explicar "por que" se tomo una decision.
+- Permite detectar degradaciones por latencia o baja confianza.
+- Ayuda a auditoria tecnica y mejora continua del flujo multiagente.
+
+### 5) Incident Centric View - Ambulance Intelligence
+
+<div align="center">
+  <img src="frontend/src/assets/pitch/Aegis-IncidentCentricView-Ambulance.PNG" alt="Incident Centric Ambulance Panel" width="100%" />
+</div>
+
+Este panel combina perfil de unidad, ETA dinamico, factores externos y proyeccion de riesgo de transporte para apoyar la asignacion mas segura y efectiva.
+
+Elementos clave:
+
+- Baseline ETA vs AI Adjusted ETA para ver impacto real del contexto.
+- Traffic Severity y Weather Impact con indicadores visuales.
+- Transport Risk Projection comparando escenario base vs ajustado.
+
+### 6) Incident Centric View - Patient Clinical Context
+
+<div align="center">
+  <img src="frontend/src/assets/pitch/Aegis-IncidentCentricView-Patient.PNG" alt="Incident Centric Patient Panel" width="100%" />
+</div>
+
+Este modulo presenta el contexto clinico de forma accionable: severidad, datos del paciente, metricas criticas y proyeccion de escalamiento de riesgo asistida por IA.
+
+Que entrega:
+
+- Estado de emergencia y severidad en cabecera.
+- Critical Metrics tabulado con estado y delta de riesgo.
+- AI Risk Escalation Projection para anticipar deterioro por factor.
+
+### 7) Incident Centric View - Operational Chat
+
+<div align="center">
+  <img src="frontend/src/assets/pitch/Aegis-IncidentCentricView-Chat.PNG" alt="Incident Centric Chat" width="100%" />
+</div>
+
+El chat operativo permite exploracion asistida del incidente, con soporte de entrada por texto y voz, y posibilidad de devolver evidencias o archivos de soporte para el operador.
+
+Capacidades visibles:
+
+- Conversacion contextual por sesion para seguimiento continuo.
+- Modo de audio en tiempo real para interaccion manos libres.
+- Respuestas con opciones y archivos de apoyo descargables.
 
 ## Overview
 
