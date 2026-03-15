@@ -46,7 +46,7 @@ AEGIS is an intelligent emergency operations platform for dispatch, routing, pat
 ## Product Preview
 
 <div align="center">
-  <img src="frontend/src/assets/pitch/Generaci%C3%B3n_de_Video_de_Introducci%C3%B3n_IA_gif.gif" alt="AEGIS Product Preview" width="100%" />
+  <img src="frontend/src/assets/pitch/Aegis%20Flow.png" alt="AEGIS Product Preview" width="100%" />
 </div>
 
 ## Product Gallery
