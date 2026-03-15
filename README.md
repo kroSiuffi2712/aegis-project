@@ -278,9 +278,17 @@ Visible endpoint groups from the main API entrypoint:
 
 ## Architecture
 
-### Visual Diagram (Eraser Export)
+### Visual Architecture Set
 
-![Aegis architecture diagram](frontend/src/assets/diagram-export-15-3-2026-12_00_26-p.m..png)
+<div align="center">
+  <img src="frontend/src/assets/pitch/aegis_system_context_architecture1.png" alt="AEGIS System Context Architecture" width="49%" />
+  <img src="frontend/src/assets/pitch/aegis_data_and_integrations_architecture2.png" alt="AEGIS Data and Integrations Architecture" width="49%" />
+</div>
+
+<div align="center">
+  <img src="frontend/src/assets/pitch/aegis_intelligent_response_flow_architecture3.png" alt="AEGIS Intelligent Response Flow Architecture" width="49%" />
+  <img src="frontend/src/assets/pitch/aegis_security_and_observability_architecture4.png" alt="AEGIS Security and Observability Architecture" width="49%" />
+</div>
 
 ```mermaid
 flowchart LR
