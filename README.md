@@ -56,9 +56,6 @@ AEGIS is a cloud-native multi-agent AI orchestrator platform for dispatch, routi
     <img src="https://img.shields.io/badge/Microsoft-Cloud%20Partner-5E5E5E?style=for-the-badge&logo=microsoft&logoColor=white" alt="Microsoft" />
   </a>
   <a href="https://azure.microsoft.com/">
-    <img src="https://img.shields.io/badge/Microsoft-Azure-0078D4?style=for-the-badge&logo=microsoftazure&logoColor=white" alt="Microsoft Azure" />
-  </a>
-  <a href="https://azure.microsoft.com/">
     <img src="https://img.shields.io/badge/%F0%9F%8F%86-Innovation%20Challenger-0A84FF?style=for-the-badge" alt="Innovation Challenger" />
   </a>
   <a href="https://www.docker.com/">
@@ -67,7 +64,9 @@ AEGIS is a cloud-native multi-agent AI orchestrator platform for dispatch, routi
 </p>
 
 <p>
-  <a href="frontend/src/assets/pitch/Generaci%C3%B3n_de_Video_de_Introducci%C3%B3n_IA.mp4">Watch Product Demo</a>
+  <a href="https://aegis-container-frontend.victoriouswater-f5bc7a58.eastus.azurecontainerapps.io">
+    <img src="https://img.shields.io/badge/Live-Demo%20App-0A84FF?style=for-the-badge&logo=microsoftedge&logoColor=white" alt="Live Demo App" />
+  </a>
 </p>
 
 <p>
