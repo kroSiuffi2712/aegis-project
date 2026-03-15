@@ -6,10 +6,11 @@
 
 <p>
   <a href="https://www.microsoft.com/">
-    <img src="https://img.shields.io/badge/Powered%20by-Microsoft-111111?style=for-the-badge&logo=windows&logoColor=00A4EF" alt="Powered by Microsoft" />
+    <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" alt="Microsoft" height="34" />
   </a>
+  &nbsp;&nbsp;
   <a href="https://azure.microsoft.com/">
-    <img src="https://img.shields.io/badge/Built%20on-Microsoft%20Azure-0078D4?style=for-the-badge&logo=microsoftazure&logoColor=white" alt="Built on Microsoft Azure" />
+    <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Microsoft_Azure.svg" alt="Microsoft Azure" height="34" />
   </a>
 </p>
 
