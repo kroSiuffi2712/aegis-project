@@ -52,17 +52,17 @@ AEGIS is a cloud-native multi-agent AI orchestrator platform for dispatch, routi
   <a href="https://learn.microsoft.com/en-us/semantic-kernel/">
     <img src="https://img.shields.io/badge/Semantic-Kernel-412991?style=for-the-badge&logo=microsoft&logoColor=white" alt="Semantic Kernel" />
   </a>
-  <a href="https://www.docker.com/">
-    <img src="https://img.shields.io/badge/Docker-Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker" />
-  </a>
-</p>
-
-<p>
   <a href="https://www.microsoft.com/">
-    <img src="https://img.shields.io/badge/Microsoft-Cloud%20Partner-5E5E5E?style=for-the-badge&logo=windows&logoColor=white" alt="Microsoft" />
+    <img src="https://img.shields.io/badge/Microsoft-Cloud%20Partner-5E5E5E?style=for-the-badge&logo=microsoft&logoColor=white" alt="Microsoft" />
   </a>
   <a href="https://azure.microsoft.com/">
-    <img src="https://img.shields.io/badge/Azure-Innovation%20Challenge-0078D4?style=for-the-badge&logo=microsoftazure&logoColor=white" alt="Azure Innovation Challenge" />
+    <img src="https://img.shields.io/badge/Microsoft-Azure-0078D4?style=for-the-badge&logo=microsoftazure&logoColor=white" alt="Microsoft Azure" />
+  </a>
+  <a href="https://azure.microsoft.com/">
+    <img src="https://img.shields.io/badge/%F0%9F%8F%86-Innovation%20Challenger-0A84FF?style=for-the-badge" alt="Innovation Challenger" />
+  </a>
+  <a href="https://www.docker.com/">
+    <img src="https://img.shields.io/badge/Docker-Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker" />
   </a>
 </p>
 
