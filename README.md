@@ -127,7 +127,7 @@ Visible endpoint groups from the main API entrypoint:
 
 ### Visual Diagram (Eraser Export)
 
-![Aegis architecture diagram](docs/architecture/aegis-architecture-eraser.svg)
+![Aegis architecture diagram](frontend/src/assets/diagram-export-15-3-2026-12_00_26-p.m..png)
 
 ```mermaid
 flowchart LR
