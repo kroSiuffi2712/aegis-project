@@ -48,6 +48,15 @@ AEGIS is a cloud-native multi-agent AI orchestrator platform for dispatch, routi
 </p>
 
 <p>
+  <a href="https://www.microsoft.com/">
+    <img src="https://img.shields.io/badge/Microsoft-Cloud%20Partner-5E5E5E?style=for-the-badge&logo=microsoft&logoColor=white" alt="Microsoft" />
+  </a>
+  <a href="https://azure.microsoft.com/">
+    <img src="https://img.shields.io/badge/Azure-Innovation%20Challenge-0078D4?style=for-the-badge&logo=microsoftazure&logoColor=white" alt="Azure Innovation Challenge" />
+  </a>
+</p>
+
+<p>
   <a href="frontend/src/assets/pitch/Generaci%C3%B3n_de_Video_de_Introducci%C3%B3n_IA.mp4">Watch Product Demo</a>
 </p>
 
