@@ -4,9 +4,9 @@
 
 <img src="frontend/src/assets/pitch/aegis_logo.png" alt="AEGIS Logo" width="120" />
 
-## AI-Powered Emergency Response Command Center
+## A cloud-native multi-agent AI Orchestrator platform to optimize real-time emergency response
 
-AEGIS is an intelligent emergency operations platform for dispatch, routing, patient triage, and decision support in real time.
+AEGIS is a cloud-native multi-agent AI orchestrator platform for dispatch, routing, patient triage, and decision support in real time.
 
 <p>
   <a href="#the-problem">Problem</a> |
@@ -23,6 +23,7 @@ AEGIS is an intelligent emergency operations platform for dispatch, routing, pat
 <p>
   <img src="https://img.shields.io/badge/FastAPI-Backend-009688?style=for-the-badge&logo=fastapi&logoColor=white" alt="FastAPI" />
   <img src="https://img.shields.io/badge/React-Frontend-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React" />
+  <img src="https://img.shields.io/badge/Microsoft-Agent%20Framework-00A4EF?style=for-the-badge&logo=microsoft&logoColor=white" alt="Microsoft Agent Framework" />
   <img src="https://img.shields.io/badge/Vite-Build-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite" />
   <img src="https://img.shields.io/badge/MongoDB-Cosmos%20Compatible-47A248?style=for-the-badge&logo=mongodb&logoColor=white" alt="MongoDB" />
   <img src="https://img.shields.io/badge/Azure-Maps%20%7C%20Search%20%7C%20AD-0078D4?style=for-the-badge&logo=microsoftazure&logoColor=white" alt="Azure" />
@@ -75,6 +76,14 @@ AEGIS solves this by unifying citizen intake, AI-assisted decisioning, and comma
 | Omnichannel intake | Supports both app/web and WhatsApp entry points. |
 | Operational visibility | Aligns citizen updates with command-center execution. |
 | Scalable architecture | Cloud-ready stack for pilots and production evolution. |
+
+## Hero Technologies
+
+- Microsoft Agent Framework for multi-agent orchestration patterns.
+- Semantic Kernel for AI coordination, prompting, and reasoning workflows.
+- Azure OpenAI for agent intelligence and structured decision support.
+- Azure AI Search for RAG-enabled contextual retrieval.
+- Azure Maps for geospatial routing and ETA intelligence.
 
 ## Product Gallery
 
@@ -221,7 +230,7 @@ Visible capabilities:
 
 ## Overview
 
-AEGIS is a real-time emergency response platform built to support high-pressure operational environments. It combines live geospatial monitoring, ambulance coordination, AI-assisted medical triage, routing intelligence, and decision traceability inside a single command-center experience.
+AEGIS is a real-time emergency response platform built to support high-pressure operational environments. It combines live geospatial monitoring, ambulance coordination, AI-assisted medical triage, routing intelligence, and decision traceability inside a single command-center experience powered by Microsoft Agent Framework and Semantic Kernel.
 
 Instead of acting like a simple CRUD system, AEGIS is designed as an operational intelligence layer for emergency dispatch. It brings together field resources, incidents, clinics, insurance constraints, route conditions, and agent reasoning so teams can respond faster and with more context.
 
@@ -300,6 +309,7 @@ Visible endpoint groups from the main API entrypoint:
 | `DispatchAgent` | Chooses the best ambulance and clinic for the case. |
 | `ResponseStrategyAgent` | Recommends response priority, dispatch mode, and units. |
 | `TransportRiskAgent` | Evaluates transport safety using route, weather, and traffic context. |
+| `Microsoft Agent Framework` | Provides agent orchestration patterns for reliable multi-agent coordination. |
 | `RAGService` | Injects retrieved context from Azure AI Search into decision flows. |
 | `Semantic Kernel` | Runs prompt-based orchestration against the configured OpenAI model. |
 
