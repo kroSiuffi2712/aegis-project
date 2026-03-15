@@ -150,6 +150,48 @@ Visible capabilities:
 - Real-time audio mode for hands-free interaction.
 - Responses with selectable options and downloadable support files.
 
+### 8) WhatsApp Intake - Emergency Report
+
+<div align="center">
+  <img src="frontend/src/assets/pitch/whatsapp_emergency_intake_bot.png" alt="WhatsApp Emergency Intake Bot" width="100%" />
+</div>
+
+This first touchpoint enables zero-friction incident reporting through WhatsApp. Citizens can report the emergency immediately without installing an app.
+
+Flow highlights:
+
+- Guided intake messages for emergency type and key details.
+- Fast location capture request to anchor the incident on the map.
+- Structured handoff-ready payload for AEGIS triage and routing.
+
+### 9) WhatsApp Intake - Case Confirmation and ETA
+
+<div align="center">
+  <img src="frontend/src/assets/pitch/whatsapp_case_confirmation_and_eta.png" alt="WhatsApp Case Confirmation and ETA" width="100%" />
+</div>
+
+After intake validation, the user receives case confirmation, case identifier, and an initial ETA estimate so they know the request is actively being processed.
+
+What this step provides:
+
+- Immediate case acknowledgment.
+- Human-readable case ID for traceability.
+- Early ETA visibility while orchestration continues in AEGIS.
+
+### 10) WhatsApp Intake - Real-Time Status Updates
+
+<div align="center">
+  <img src="frontend/src/assets/pitch/whatsapp_real_time_status_updates.png" alt="WhatsApp Real-Time Status Updates" width="100%" />
+</div>
+
+The final stage keeps the citizen informed with automatic progress updates from dispatch to arrival, aligned with command-center decisions.
+
+Operational value:
+
+- Reduces uncertainty during critical incidents.
+- Mirrors AEGIS dispatch status in a familiar channel.
+- Extends command-center transparency to end users.
+
 ## Overview
 
 AEGIS is a real-time emergency response platform built to support high-pressure operational environments. It combines live geospatial monitoring, ambulance coordination, AI-assisted medical triage, routing intelligence, and decision traceability inside a single command-center experience.
