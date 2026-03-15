@@ -81,16 +81,6 @@ Return STRICT JSON.
 Do NOT add fields.
 Do NOT change field names.
 Do NOT include explanations outside JSON.
-IDs must be returned as STRING values.
-
-------------------------
-CRITICAL RULE:
-------------------------
-
-selected_ambulance_id MUST be one of VALID AMBULANCE IDS.
-selected_clinic_id MUST be one of VALID CLINIC IDS.
-
-If you select an ID that is not in these lists the answer is INVALID.
 
 ------------------------
 OUTPUT FORMAT
@@ -119,6 +109,42 @@ OUTPUT FORMAT
 
             validated.selected_ambulance_index = int(validated.selected_ambulance_index)
             validated.selected_clinic_index = int(validated.selected_clinic_index)
+
+            # ---------------------------------
+            # REAL CONFIDENCE CALCULATION
+            # ---------------------------------
+
+            try:
+
+                selected_ambulance = candidate_ambulances[
+                    validated.selected_ambulance_index
+                ]
+
+                best_eta = selected_ambulance.get("eta_to_patient", 999)
+
+                eta_list = [
+                    a.get("eta_to_patient", 999)
+                    for a in candidate_ambulances
+                ]
+
+                eta_list_sorted = sorted(eta_list)
+
+                if len(eta_list_sorted) > 1:
+                    second_best_eta = eta_list_sorted[1]
+
+                    margin = second_best_eta - best_eta
+
+                    confidence = 1 - (margin / max(second_best_eta, 1))
+
+                else:
+                    confidence = 0.75
+
+                confidence = max(0.6, min(confidence, 0.95))
+
+            except Exception:
+                confidence = 0.75
+
+            validated.confidence = round(confidence, 2)
 
             return validated.model_dump()
 

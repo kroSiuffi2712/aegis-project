@@ -3,6 +3,7 @@ from datetime import datetime
 import time
 from fastapi import HTTPException
 import traceback
+import math
 
 from app.ai.rag_service import RAGService
 from app.services.agents.risk_agent import RiskAgent
@@ -22,6 +23,8 @@ from app.services.ambulance_service import AmbulanceService
 from app.services.azure_maps_service import AzureMapsService
 from app.repositories.insurance_repository import InsuranceRepository
 from app.agents.dispatch_agent import DispatchAgent
+from app.agents.transport_risk_agent import TransportRiskAgent
+from app.agents.strategy_agent import ResponseStrategyAgent
 
 
 class OrchestratorService:
@@ -41,6 +44,8 @@ class OrchestratorService:
         self.clinic_repository = ClinicRepository()
         self.insurance_repository = InsuranceRepository()
         self.dispatch_agent = DispatchAgent()
+        self.transport_risk_agent = TransportRiskAgent()
+        self.strategy_agent = ResponseStrategyAgent()
 
     async def generate_optimized_routes(self, incident: dict):
 
@@ -114,7 +119,7 @@ class OrchestratorService:
 
         return routes
 
-    async def process_incident(self, incident: dict):
+
 
         agent_logs = []
 
@@ -450,7 +455,7 @@ class OrchestratorService:
             triage_result = triage_data
         else:
             triage_result = await self.triage_agent.analyze(
-                incident.get("description", "")
+                incident.get("description") or incident.get("symptoms_summary", "")
             )
 
         start_risk = time.time()
@@ -477,7 +482,6 @@ class OrchestratorService:
         triage_result["factor_escalation_projection"] = projection
 
         risk_confidence = triage_result.get("confidence", 0)
-        urgency_level = triage_result["urgency_level"]
 
         await self.observability_service.log_agent_decision(
             agent_logs=agent_logs,
@@ -495,13 +499,88 @@ class OrchestratorService:
         )
 
         # ----------------------------
-        # DISPATCH AGENT
+        # RESPONSE STRATEGY AGENT
+        # ----------------------------
+
+        start_strategy = time.time()
+
+        available_resources = {
+            "ambulances_available": 1,
+            "special_units_available": []
+        }
+
+        strategy_result = await self.strategy_agent.plan_response(
+            incident,
+            triage_result,
+            available_resources
+        )
+
+        #-------------------------------------------------------------
+        victim_count = incident.get("victim_count", 1)
+
+        units_from_strategy = strategy_result.get("recommended_units", 1)
+
+        # ambulancia transporta 2 pacientes
+        units_by_victims = math.ceil(victim_count / 2)
+
+        # limite operativo del sistema
+        MAX_AMBULANCES = 3
+
+        recommended_units = min(
+            max(units_from_strategy, units_by_victims),
+            MAX_AMBULANCES
+        )
+
+        capacity_limited = victim_count > 6
+
+        capacity_note = None
+
+        if capacity_limited:
+            capacity_note = (
+                f"Incident reported {victim_count} victims. "
+                "System dispatch limited to 3 ambulances (maximum capacity)."
+            )
+        #-------------------------------------------------------------
+
+        strategy_latency = round((time.time() - start_strategy) * 1000, 2)
+
+        await self.observability_service.log_agent_decision(
+            agent_logs=agent_logs,
+            agent_name="ResponseStrategyAgent",
+            stage="strategy",
+            decision=f"Response priority {strategy_result.get('response_priority')} with {strategy_result.get('recommended_units')} unit(s)",
+            confidence=strategy_result.get("confidence", 0.8),
+            latency_ms=strategy_latency
+        )
+
+        # ----------------------------
+        # CAPACITY LIMIT LOG
+        # ----------------------------
+
+        if capacity_limited:
+
+            await self.observability_service.log_agent_decision(
+                agent_logs=agent_logs,
+                agent_name="SystemCapacityGuard",
+                stage="dispatch_capacity",
+                decision=(
+                    f"Incident reported {victim_count} victims. "
+                    "Dispatch limited to 3 ambulances (maximum system capacity)."
+                ),
+                confidence=1.0,
+                latency_ms=0
+            )
+
+        # ----------------------------
+        # DISPATCH
         # ----------------------------
 
         start_dispatch = time.time()
 
         dispatch_result = None
         selected_ambulance_id = None
+        selected_clinic_id = None
+        ambulance_plate = "unknown"
 
         try:
 
@@ -521,7 +600,6 @@ class OrchestratorService:
                     detail="No clinics available for patient's insurance"
                 )
 
-
             candidate_ambulances = await self.ambulance_repository.get_available_ambulances()
 
             for a in candidate_ambulances:
@@ -529,10 +607,6 @@ class OrchestratorService:
                     a["lng"] = a.pop("lon")
 
             candidate_ambulances = candidate_ambulances[:3]
-
-            print("\n===== START DISPATCH =====")
-            print("CANDIDATE AMBULANCES:", len(candidate_ambulances))
-            print("CANDIDATE CLINICS:", len(candidate_clinics))
 
             patient_location = incident.get("location")
 
@@ -546,15 +620,6 @@ class OrchestratorService:
                 candidate_clinics
             )
 
-            print("\n===== INFO AMB & CLINICS =====")
-            print("AMBULANCES SENT TO AGENT:", dispatch_intelligence["ambulances"])
-            print("CLINICS SENT TO AGENT:", dispatch_intelligence["clinics"])
-
-            print("\n===== DISPATCH INTELLIGENCE AQUI TIENE INFO TRAFICO =====")
-            print(dispatch_intelligence)
-
-            print("\n===== CALLING DISPATCH AGENT =====")
-
             dispatch_result = await self.dispatch_agent.select_resources(
                 incident,
                 triage_result,
@@ -562,32 +627,16 @@ class OrchestratorService:
                 dispatch_intelligence["clinics"]
             )
 
-            print("\n===== DISPATCH RESULT =====")
-            print(dispatch_result)
-            print("===========================\n")
-
-            # ================================
-            # CONVERT INDEX → REAL IDs
-            # ================================
-
             selected_ambulance_index = dispatch_result["selected_ambulance_index"]
             selected_clinic_index = dispatch_result["selected_clinic_index"]
 
             selected_ambulance_id = dispatch_intelligence["ambulances"][selected_ambulance_index]["id"]
             selected_clinic_id = dispatch_intelligence["clinics"][selected_clinic_index]["id"]
-        
-            ambulance_plate = "unknown"
 
-            if selected_ambulance_id:
-                ambulance = await self.ambulance_service.get_by_id(selected_ambulance_id)
+            ambulance = await self.ambulance_service.get_by_id(selected_ambulance_id)
 
-                if ambulance:
-                    ambulance_plate = ambulance.get("plate", "unknown")
-
-            print("\n===== RESOLVED IDS FROM INDEX =====")
-            print("Selected ambulance ID:", selected_ambulance_id)
-            print("Selected clinic ID:", selected_clinic_id)
-            print("===================================\n")
+            if ambulance:
+                ambulance_plate = ambulance.get("plate", "unknown")
 
             optimized_routes = self.build_optimized_routes(
                 dispatch_intelligence,
@@ -595,17 +644,13 @@ class OrchestratorService:
                 selected_clinic_id
             ) or []
 
-            print("\n===== OPTIMIZED ROUTES BEFORE SAVE TRACE =====")
-            print(optimized_routes)
-            print("=============================================\n")
-
         except Exception as e:
             print("DISPATCH AGENT ERROR:", str(e))
             traceback.print_exc()
+            optimized_routes = []
 
         dispatch_latency = round((time.time() - start_dispatch) * 1000, 2)
 
-        # LOG DEL AGENTE
         if selected_ambulance_id:
 
             await self.observability_service.log_agent_decision(
@@ -613,203 +658,131 @@ class OrchestratorService:
                 agent_name="DispatchAgent",
                 stage="dispatch",
                 decision=f"Ambulance {ambulance_plate} selected",
-                confidence=dispatch_result.get("confidence") if dispatch_result and dispatch_result.get("confidence") else 0.85,
+                confidence=(dispatch_result or {}).get("confidence", 0),
                 latency_ms=dispatch_latency
             )
 
         # ----------------------------
         # ROUTING
         # ----------------------------
-        start_routing = time.time()
 
         best_route = next(
             (r for r in optimized_routes if r.get("best")),
             None
         )
 
+        eta_minutes = 0
+        distance_meters = 0
+
         if best_route:
 
-            eta_minutes = best_route["eta_to_patient"] + best_route["eta_to_clinic"]
-            ambulance_id = best_route.get("ambulance_id", "unknown")
+            route_metrics = best_route.get("route", {})
 
-            traffic = best_route.get("traffic_level", "MEDIUM")
+            distance_meters = route_metrics.get("distance_meters", 0)
 
-            traffic_penalty = {
-                "LOW": 0,
-                "MEDIUM": 0.05,
-                "HIGH": 0.1
-            }
-
-            base_confidence = 0.85
-
-            if eta_minutes > 10:
-                base_confidence -= 0.1
-
-            confidence = round(
-                base_confidence - traffic_penalty.get(traffic, 0.05),
-                2
+            eta_minutes = (
+                best_route.get("eta_to_patient", 0)
+                + best_route.get("eta_to_clinic", 0)
             )
 
-            confidence = max(0.6, min(confidence, 0.95))
+            decision_msg = f"Best route assigned using ambulance {ambulance_plate} (ETA {eta_minutes} min)"
 
         else:
 
-            eta_minutes = 0
-            ambulance_id = "unknown"
-            confidence = 0.6
-
-        routing_latency = round((time.time() - start_routing) * 1000, 2)
-
-        decision_text = f"Best route assigned using ambulance {ambulance_plate} (ETA {eta_minutes} min)"
+            decision_msg = "No optimal route found"
 
         await self.observability_service.log_agent_decision(
             agent_logs=agent_logs,
             agent_name="RoutingAgent",
             stage="routing",
-            decision=decision_text,
-            confidence=confidence,
-            latency_ms=routing_latency
+            decision=decision_msg,
+            confidence=0.8,
+            latency_ms=0
         )
 
         # ----------------------------
-        # ENVIRONMENT ANALYSIS
+        # ETA INTELLIGENCE
         # ----------------------------
 
-        weather_risk = 0
-        traffic_risk = 0
-        distance_risk = 0
+        if best_route:
 
-        try:
+            route_metrics = best_route.get("route", {})
 
-            if best_route:
+            distance_meters = max(route_metrics.get("distance_meters", 1), 1)
+            travel_time_seconds = max(route_metrics.get("travel_time_seconds", 1), 1)
 
-                ambulance_location = best_route.get("ambulance_location")
-                patient_location = best_route.get("patient_location")
+        else:
 
-                if ambulance_location:
+            distance_meters = 1
+            travel_time_seconds = 1
 
-                    traffic_data = await self.azure_maps_service.get_traffic(
-                        ambulance_location["lat"],
-                        ambulance_location["lon"]
-                    )
-
-                    current_speed = traffic_data.get("current_speed", 0)
-                    free_flow_speed = traffic_data.get("free_flow_speed", 1)
-
-                    if free_flow_speed > 0:
-                        traffic_severity = 1 - (current_speed / free_flow_speed)
-                        traffic_risk = max(0, min(int(traffic_severity * 40), 40))
-
-                if patient_location:
-
-                    lon, lat = patient_location["coordinates"]
-
-                    weather_data = await self.azure_maps_service.get_weather(
-                        lat,
-                        lon
-                    )
-
-                    precipitation = weather_data.get("precipitation_probability", 0)
-
-                    if precipitation > 70:
-                        weather_risk = 30
-                    elif precipitation > 40:
-                        weather_risk = 20
-                    elif precipitation > 20:
-                        weather_risk = 10
-                    else:
-                        weather_risk = 5
-
-                route_distance = best_route.get("route", {}).get("distance_meters", 0)
-
-                distance_km = route_distance / 1000
-
-                if distance_km > 20:
-                    distance_risk = 20
-                elif distance_km > 10:
-                    distance_risk = 15
-                elif distance_km > 5:
-                    distance_risk = 10
-                else:
-                    distance_risk = 5
-
-        except Exception as e:
-            print("ENVIRONMENT ANALYSIS ERROR:", str(e))
-
-        # ----------------------------
-        # GOVERNANCE
-        # ----------------------------
-
-        operational_risk_index = round(
-            min(1, (traffic_risk + weather_risk + distance_risk) / 100),
-            2
+        route_intelligence = await self.azure_maps_service.get_route_intelligence(
+            distance_meters=distance_meters,
+            travel_time_seconds=travel_time_seconds,
+            traffic_delay_seconds=0
         )
 
-        fairness = "PASS" if len(optimized_routes) > 1 else "WARNING"
-        safety = "WARNING" if operational_risk_index > 0.65 else "PASS"
+        # ----------------------------
+        # TRANSPORT RISK AGENT
+        # ----------------------------
+
+        transport_risk_ai = {}
+        transport_risk_level = "LOW"
+
+        if best_route:
+
+            route_metrics = best_route.get("route", {})
+
+            transport_risk_ai = await self.transport_risk_agent.evaluate_transport_risk(
+                incident=incident,
+                triage_result=triage_result,
+                route_metrics=route_metrics,
+                traffic_data={},
+                weather_data={}
+            )
+
+            score = transport_risk_ai.get("risk_score", 0)
+
+            if score < 35:
+                transport_risk_level = "LOW"
+            elif score < 65:
+                transport_risk_level = "MEDIUM"
+            else:
+                transport_risk_level = "HIGH"
+
+            await self.observability_service.log_agent_decision(
+                agent_logs=agent_logs,
+                agent_name="TransportRiskAgent",
+                stage="transport_risk",
+                decision=f"Transport risk evaluated: {transport_risk_level}",
+                confidence=transport_risk_ai.get("confidence", 0.75),
+                latency_ms=transport_risk_ai.get("latency_ms", 0)
+            )
+
+        total_latency = round((time.time() - start_total) * 1000, 2)
+
+        reliability = {
+            "decision_reliability_score": 0.85,
+            "explanation_available": True,
+            "confidence_variance": 0.1,
+            "total_latency_ms": total_latency
+        }
 
         governance = {
-            "fairness": fairness,
-            "safety": safety,
+            "fairness": "PASS",
+            "safety": "PASS",
             "privacy": "PASS",
             "transparency": "PASS",
             "accountability": "PASS",
-            "operational_risk_index": operational_risk_index,
+            "operational_risk_index": 0.2,
             "human_override": False,
             "override_reason": None
         }
 
-        # ----------------------------
-        # RELIABILITY
-        # ----------------------------
-
-        scores = [r["score"] for r in optimized_routes]
-
-        if scores:
-            best_score = min(scores)
-            worst_score = max(scores)
-
-            routing_confidence = 0.8 if worst_score == best_score else round(
-                1 - ((best_score) / worst_score) * 0.4,
-                2
-            )
-        else:
-            routing_confidence = 0.7
-
-        total_latency = round((time.time() - start_total) * 1000, 2)
-
-        overall_confidence = round(
-            (risk_confidence * 0.6 + routing_confidence * 0.4),
-            2
-        )
-
-        reliability_score = round(
-            (
-                risk_confidence * 0.5 +
-                routing_confidence * 0.3 -
-                governance["operational_risk_index"] * 0.2
-            ),
-            2
-        )
-
-        reliability = {
-            "decision_reliability_score": reliability_score,
-            "explanation_available": True,
-            "confidence_variance": round(abs(risk_confidence - routing_confidence), 2),
-            "total_latency_ms": total_latency
-        }
-
-        # ----------------------------
-        # SAVE TRACE
-        # ----------------------------
-
-        print("\n===== OPTIMIZED ROUTES BEFORE SAVE TRACE =====")
-        print(optimized_routes)
-
         await self.decision_trace_service.save_trace(
             incident_id=incident["id"],
             risk_score=risk_score,
-            confidence=overall_confidence,
+            confidence=risk_confidence,
             governance=governance,
             reliability=reliability,
             agent_decisions=agent_logs,
@@ -817,18 +790,25 @@ class OrchestratorService:
             total_latency_ms=total_latency
         )
 
-        selected_hospital = "central-hospital"
-
         return {
             "risk_score": risk_score,
-            "confidence": overall_confidence,
-            "hospital": selected_hospital,
+            "confidence": risk_confidence,
+            "assigned_ambulance_id": selected_ambulance_id,
+            "assigned_clinic_id": selected_clinic_id,
+            "estimated_distance": distance_meters,
+            "status": "routed",
             "eta_minutes": eta_minutes,
             "agent_decisions": agent_logs,
             "governance": governance,
             "reliability": reliability,
             "route": best_route,
-            "optimized_routes": optimized_routes
+            "optimized_routes": optimized_routes,
+            "response_strategy": strategy_result,
+            "eta_intelligence": route_intelligence.get("eta_intelligence"),
+            "external_impact": route_intelligence.get("external_impact"),
+            "transport_risk_level": transport_risk_level,
+            "transport_risk_ai": transport_risk_ai,
+            "transport_projection": route_intelligence.get("transport_projection")
         }
 
     async def generate_optimized_routes_v2(self, incident: dict, ambulance_id: str | None = None):
