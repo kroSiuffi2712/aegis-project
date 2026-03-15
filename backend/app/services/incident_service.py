@@ -1,6 +1,7 @@
 import random
 import string
 import math
+import time
 from datetime import datetime
 
 from app.core.database import get_database
@@ -15,6 +16,7 @@ from app.services.decision_trace_service import DecisionTraceService
 from app.agents.emergency_triage_agent import TriageAgent
 from app.ai.rag_service import RAGService
 from app.services.triage_service import TriageService
+from app.agents.transport_risk_agent import TransportRiskAgent
 
 
 
@@ -581,6 +583,7 @@ class IncidentService:
         }
     
     async def create_incident_v2(self, payload):
+
         db = get_database()
 
         zone = await db["zones"].find_one({"_id": payload.zone_id})
@@ -613,107 +616,25 @@ class IncidentService:
 
         incident = await self.incident_repository.create_incident(incident_data)
 
-        # ===============================
-        # TRIAGE AGENT (AI CLASSIFICATION)
-        # ===============================
-
-        triage_result = None
-
-        try:
-            triage_result = await self.triage_agent.analyze(payload.symptoms_summary)
-
-            risk_score = self.triage_service.calculate_risk_score(triage_result)
-            triage_result["risk_score"] = risk_score
-
-            print("\n===== TRIAGE AGENT RESULT =====")
-            print(triage_result)
-            print("================================\n")
-
-        except Exception as e:
-            # No romper el flujo si el agente falla
-            triage_result = None
-
-
         await db["zones"].update_one(
             {"_id": payload.zone_id},
             {"$inc": {"active_incidents": 1}}
         )
 
         # ===============================
-        # ORCHESTRATOR PROCESS
+        # ORCHESTRATOR
         # ===============================
+
         orchestrator = OrchestratorService()
 
         incident_for_orchestrator = {
             **incident,
             "id": str(incident["_id"]),
-            "triage": triage_result
+            "description": payload.symptoms_summary,
+            "triage": None
         }
 
         decision = await orchestrator.process_incident_v2(incident_for_orchestrator)
-
-        # ===============================
-        # ROUTE DATA FOR ETA INTELLIGENCE
-        # ===============================
-
-        route = decision.get("route", {})
-
-        route_metrics = route.get("route", {})
-
-        distance_meters = max(route_metrics.get("distance_meters", 1), 1)
-        travel_time_seconds = max(route_metrics.get("travel_time_seconds", 1), 1)
-
-        # si aún no usas tráfico real
-        traffic_delay_seconds = 0
-
-        print("\n===== ROUTE DATA USED FOR ETA =====")
-        print("distance_meters:", distance_meters)
-        print("travel_time_seconds:", travel_time_seconds)
-        print("traffic_delay_seconds:", traffic_delay_seconds)
-        print("===================================\n")
-        
-        route_intelligence = await self.azure_maps_service.get_route_intelligence(
-            distance_meters=distance_meters,
-            travel_time_seconds=travel_time_seconds,
-            traffic_delay_seconds=traffic_delay_seconds
-        )
-
-        traffic = route_intelligence.get("external_impact", {}).get("traffic_severity_percent", 0)
-        weather = route_intelligence.get("external_impact", {}).get("weather_impact_percent", 0)
-
-        eta = max(
-            route_intelligence.get("eta_intelligence", {}).get("ai_adjusted_eta_minutes", 1),
-            1
-        )
-
-        reliability_score = max(
-            decision.get("reliability", {}).get("decision_reliability_score", 0.8),
-            0.01
-        )
-
-        transport_risk_score = int(
-            (traffic * 0.4) +
-            (weather * 0.3) +
-            (eta * 2) +
-            ((1 - reliability_score) * 20)
-        )
-
-        if transport_risk_score < 35:
-            transport_risk_level = "LOW"
-        elif transport_risk_score < 65:
-            transport_risk_level = "MEDIUM"
-        else:
-            transport_risk_level = "HIGH"
-
-
-        assigned_ambulance_id = None
-        assigned_clinic_id = None
-
-        route = decision.get("route")
-
-        if route:
-            assigned_ambulance_id = route.get("ambulance_id")
-            assigned_clinic_id = route.get("clinic_id")
 
         # ===============================
         # UPDATE INCIDENT
@@ -722,21 +643,22 @@ class IncidentService:
         updated_incident = await self.incident_repository.update_incident(
             str(incident["_id"]),
             {
-                "risk_score": decision["risk_score"],
-                "confidence": decision["confidence"],
-                "assigned_ambulance_id": assigned_ambulance_id,
-                "assigned_clinic_id": assigned_clinic_id,
-                "estimated_distance": distance_meters,
-                "status": "routed",
-                "route": decision["route"],
-                "optimized_routes": decision["optimized_routes"],
-                "transport_risk_level": transport_risk_level,
+                "risk_score": decision.get("risk_score"),
+                "confidence": decision.get("confidence"),
+                "assigned_ambulance_id": decision.get("assigned_ambulance_id"),
+                "assigned_clinic_id": decision.get("assigned_clinic_id"),
+                "estimated_distance": decision.get("estimated_distance"),
+                "status": decision.get("status"),
+                "route": decision.get("route"),
+                "optimized_routes": decision.get("optimized_routes"),
+                "transport_risk_level": decision.get("transport_risk_level"),
+                "transport_risk_ai": decision.get("transport_risk_ai"),
+                "transport_projection": decision.get("transport_projection"),
                 "agent_decisions": decision.get("agent_decisions", []),
                 "governance": decision.get("governance"),
                 "reliability": decision.get("reliability"),
-                "eta_intelligence": route_intelligence.get("eta_intelligence"),
-                "external_impact": route_intelligence.get("external_impact"),
-                "transport_projection": route_intelligence.get("transport_projection")
+                "eta_intelligence": decision.get("eta_intelligence"),
+                "external_impact": decision.get("external_impact")
             }
         )
 
@@ -765,19 +687,3 @@ class IncidentService:
             "reliability": updated_incident.get("reliability"),
             "created_at": updated_incident["created_at"]
         }
-
-        #--------------------------------------------------
-
-        #payload_dict = payload.model_dump()
-
-        #incident = await self.incident_repository.create(payload_dict)
-
-        #if "_id" in incident:
-        #    incident["id"] = incident.pop("_id")
-
-        #result = await self.orchestrator_service.process_incident_v2(incident)
-
-        #return {
-        #    "incident": incident,
-        #    "analysis": result
-        #}
