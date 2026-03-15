@@ -1,0 +1,90 @@
+title Aegis Intelligent Runtime Flow
+
+direction right
+
+Users [icon: users, color: gray] {
+  Dispatcher [icon: user, label: "Dispatcher"]
+  Supervisor [icon: user-check, label: "Supervisor"]
+}
+
+Frontend Layer [icon: monitor, color: blue] {
+  React Frontend [icon: react, label: "React + Vite UI"]
+  Incident Panel [icon: layout, label: "Incident-Centric View"]
+  Live Map UI [icon: map, label: "Live Map"]
+}
+
+API and Core Services [icon: server, color: indigo] {
+  API Gateway [icon: nginx, label: "Nginx / Gateway"]
+  FastAPI Backend [icon: cloud, label: "FastAPI API"]
+  Orchestrator Service [icon: workflow, label: "Orchestrator"]
+  Emergency Triage Agent [icon: activity, label: "Triage Agent"]
+  Dispatch Agent [icon: truck, label: "Dispatch Agent"]
+  Response Strategy Agent [icon: target, label: "Strategy Agent"]
+  Transport Risk Agent [icon: alert-triangle, label: "Transport Risk Agent"]
+  Decision Trace Service [icon: file-text, label: "Decision Trace"]
+  Incident Update Service [icon: refresh-cw, label: "Incident Update"]
+}
+
+Azure AI Services [icon: azure-resource-groups, color: cyan] {
+  Azure OpenAI [icon: azure-openai]
+  Azure AI Search [icon: azure-cognitive-search]
+  Azure Maps [icon: azure-maps-accounts]
+}
+
+Data Layer [icon: database, color: green] {
+  Incident Repository [icon: database, label: "Incident Repo"]
+  Decision Trace Repository [icon: database, label: "Trace Repo"]
+  Patient Repository [icon: database, label: "Patient Repo"]
+  Ambulance Repository [icon: database, label: "Ambulance Repo"]
+  Provider Repository [icon: database, label: "Provider Repo"]
+}
+
+Observability [icon: bar-chart-2, color: purple] {
+  Azure Monitor [icon: azure-monitor]
+  Application Insights [icon: azure-application-insights]
+  Ops Alerts [icon: bell, label: "Ops Alerts"]
+}
+
+Dispatcher > React Frontend: request
+Supervisor > React Frontend: request
+React Frontend > Incident Panel: live updates
+React Frontend > Live Map UI: live updates
+React Frontend > API Gateway: auth/validate
+API Gateway > FastAPI Backend: request
+FastAPI Backend > Orchestrator Service: orchestrate
+
+Orchestrator Service > Emergency Triage Agent: triage classify
+Orchestrator Service > Dispatch Agent: dispatch decision
+Orchestrator Service > Response Strategy Agent: response strategy
+Orchestrator Service > Transport Risk Agent: transport risk
+Orchestrator Service > Decision Trace Service: decision trace
+Orchestrator Service > Incident Update Service: persist updates
+
+Emergency Triage Agent > Azure AI Search: retrieve context
+Emergency Triage Agent > Azure OpenAI: reasoning
+Dispatch Agent > Azure Maps: route + ETA
+Transport Risk Agent > Azure Maps: route + ETA
+Response Strategy Agent > Azure OpenAI: reasoning
+
+FastAPI Backend > Incident Repository: read/write
+FastAPI Backend > Patient Repository: read/write
+FastAPI Backend > Ambulance Repository: read/write
+FastAPI Backend > Provider Repository: read/write
+Decision Trace Service > Decision Trace Repository: read/write
+Incident Update Service > Incident Repository: read/write
+Incident Update Service > Orchestrator Service: re-evaluate
+
+FastAPI Backend --> Azure Monitor: telemetry
+Orchestrator Service --> Azure Monitor: telemetry
+Emergency Triage Agent --> Azure Monitor: telemetry
+Dispatch Agent --> Azure Monitor: telemetry
+Decision Trace Service --> Azure Monitor: telemetry
+Azure Monitor > Application Insights: telemetry
+Application Insights > Ops Alerts: telemetry
+
+FastAPI Backend --> React Frontend: live updates
+
+legend {
+  [connection: ">", label: "Synchronous call"]
+  [connection: "-->", label: "Async event / telemetry"]
+}

@@ -2,7 +2,7 @@
 
 <div align="center">
 
-<img src="frontend/src/assets/logo.svg" alt="AEGIS Logo" width="110" />
+<img src="frontend/src/assets/pitch/aegis_logo.png" alt="AEGIS Logo" width="120" />
 
 ## AI-Powered Emergency Response Command Center
 
@@ -28,7 +28,7 @@ AEGIS is an intelligent emergency operations platform for dispatch, routing, pat
 </p>
 
 <p>
-  <a href="frontend/src/assets/aegis.mp4">Watch Product Demo</a>
+  <a href="frontend/src/assets/pitch/Generaci%C3%B3n_de_Video_de_Introducci%C3%B3n_IA.mp4">Watch Product Demo</a>
 </p>
 
 </div>
@@ -36,7 +36,19 @@ AEGIS is an intelligent emergency operations platform for dispatch, routing, pat
 ## Product Preview
 
 <div align="center">
-  <img src="frontend/src/assets/aegis.png" alt="AEGIS Product Preview" width="100%" />
+  <img src="frontend/src/assets/pitch/portada-sin-info.png" alt="AEGIS Product Preview" width="100%" />
+</div>
+
+## Product Gallery
+
+<div align="center">
+  <img src="frontend/src/assets/pitch/Aegis-img1.PNG" alt="AEGIS Main Map" width="48%" />
+  <img src="frontend/src/assets/pitch/Aegis-AIDecisionCenter.PNG" alt="AEGIS AI Decision Center" width="48%" />
+</div>
+
+<div align="center">
+  <img src="frontend/src/assets/pitch/Aegis-IncidentCentricView-Analytic.PNG" alt="Incident Centric Analytics" width="48%" />
+  <img src="frontend/src/assets/pitch/Aegis-IncidentCentricView-Chat.PNG" alt="Incident Centric Chat" width="48%" />
 </div>
 
 ## Overview
@@ -219,6 +231,13 @@ sequenceDiagram
 ```
 
 ## Deployment View
+
+### Eraser Source Diagrams
+
+- [docs/architecture/aegis-deployment-architecture.eraser](docs/architecture/aegis-deployment-architecture.eraser)
+- [docs/architecture/aegis-intelligent-flow.eraser](docs/architecture/aegis-intelligent-flow.eraser)
+- [docs/architecture/aegis-data-integrations.eraser](docs/architecture/aegis-data-integrations.eraser)
+- [docs/architecture/aegis-security-observability.eraser](docs/architecture/aegis-security-observability.eraser)
 
 ```mermaid
 flowchart LR
