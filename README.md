@@ -51,7 +51,49 @@ AEGIS is an intelligent emergency operations platform for dispatch, routing, pat
 
 ## Product Gallery
 
-### 1) Real-Time Operations Map
+### 1) WhatsApp Intake - Emergency Report
+
+<div align="center">
+  <img src="frontend/src/assets/pitch/whatsapp_emergency_intake_bot.png" alt="WhatsApp Emergency Intake Bot" width="60%" />
+</div>
+
+This first touchpoint enables zero-friction incident reporting through WhatsApp. Citizens can report the emergency immediately without installing an app.
+
+Flow highlights:
+
+- Guided intake messages for emergency type and key details.
+- Fast location capture request to anchor the incident on the map.
+- Structured handoff-ready payload for AEGIS triage and routing.
+
+### 2) WhatsApp Intake - Case Confirmation and ETA
+
+<div align="center">
+  <img src="frontend/src/assets/pitch/whatsapp_case_confirmation_and_eta.png" alt="WhatsApp Case Confirmation and ETA" width="60%" />
+</div>
+
+After intake validation, the user receives case confirmation, case identifier, and an initial ETA estimate so they know the request is actively being processed.
+
+What this step provides:
+
+- Immediate case acknowledgment.
+- Human-readable case ID for traceability.
+- Early ETA visibility while orchestration continues in AEGIS.
+
+### 3) WhatsApp Intake - Real-Time Status Updates
+
+<div align="center">
+  <img src="frontend/src/assets/pitch/whatsapp_real_time_status_updates.png" alt="WhatsApp Real-Time Status Updates" width="60%" />
+</div>
+
+The final stage keeps the citizen informed with automatic progress updates from dispatch to arrival, aligned with command-center decisions.
+
+Operational value:
+
+- Reduces uncertainty during critical incidents.
+- Mirrors AEGIS dispatch status in a familiar channel.
+- Extends command-center transparency to end users.
+
+### 4) Real-Time Operations Map
 
 <div align="center">
   <img src="frontend/src/assets/pitch/Aegis-img1.PNG" alt="AEGIS Main Map" width="100%" />
@@ -65,7 +107,7 @@ What it does in practice:
 - Renders incident and unit markers using dedicated map hooks.
 - Connects incident selection to the operational analytics and decision drawer.
 
-### 2) AI Decision Center
+### 5) AI Decision Center
 
 <div align="center">
   <img src="frontend/src/assets/pitch/Aegis-AIDecisionCenter.PNG" alt="AEGIS AI Decision Center" width="100%" />
@@ -79,7 +121,7 @@ Key highlights:
 - Decision quality cards (reliability, confidence variance, latency).
 - Governance panel and end-to-end agent decision pipeline.
 
-### 3) Incident Centric View - AI Route Intelligence (Analytics)
+### 6) Incident Centric View - AI Route Intelligence (Analytics)
 
 <div align="center">
   <img src="frontend/src/assets/pitch/Aegis-IncidentCentricView-Analytic.PNG" alt="Incident Centric Analytics" width="100%" />
@@ -94,7 +136,7 @@ It includes:
 - Predictive Signals for traffic, delays, and operational probability.
 - Bar-based Risk Breakdown explaining why one route is riskier than another.
 
-### 4) Incident Centric View - Agent Trace
+### 7) Incident Centric View - Agent Trace
 
 <div align="center">
   <img src="frontend/src/assets/pitch/Aegis-IncidentCentricView-Agent.PNG" alt="Incident Centric Agent Trace" width="100%" />
@@ -108,7 +150,7 @@ Operational value:
 - Helps detect quality degradation caused by latency or low confidence.
 - Supports technical auditability and continuous multi-agent optimization.
 
-### 5) Incident Centric View - Ambulance Intelligence
+### 8) Incident Centric View - Ambulance Intelligence
 
 <div align="center">
   <img src="frontend/src/assets/pitch/Aegis-IncidentCentricView-Ambulance.PNG" alt="Incident Centric Ambulance Panel" width="100%" />
@@ -122,7 +164,7 @@ Key elements:
 - Traffic Severity and Weather Impact with visual indicators.
 - Transport Risk Projection comparing baseline vs adjusted scenario.
 
-### 6) Incident Centric View - Patient Clinical Context
+### 9) Incident Centric View - Patient Clinical Context
 
 <div align="center">
   <img src="frontend/src/assets/pitch/Aegis-IncidentCentricView-Patient.PNG" alt="Incident Centric Patient Panel" width="100%" />
@@ -136,7 +178,7 @@ What it provides:
 - Tabular Critical Metrics with status and risk delta.
 - AI Risk Escalation Projection to anticipate deterioration by factor.
 
-### 7) Incident Centric View - Operational Chat
+### 10) Incident Centric View - Operational Chat
 
 <div align="center">
   <img src="frontend/src/assets/pitch/Aegis-IncidentCentricView-Chat.PNG" alt="Incident Centric Chat" width="100%" />
@@ -149,48 +191,6 @@ Visible capabilities:
 - Session-based contextual conversation for continuous follow-up.
 - Real-time audio mode for hands-free interaction.
 - Responses with selectable options and downloadable support files.
-
-### 8) WhatsApp Intake - Emergency Report
-
-<div align="center">
-  <img src="frontend/src/assets/pitch/whatsapp_emergency_intake_bot.png" alt="WhatsApp Emergency Intake Bot" width="100%" />
-</div>
-
-This first touchpoint enables zero-friction incident reporting through WhatsApp. Citizens can report the emergency immediately without installing an app.
-
-Flow highlights:
-
-- Guided intake messages for emergency type and key details.
-- Fast location capture request to anchor the incident on the map.
-- Structured handoff-ready payload for AEGIS triage and routing.
-
-### 9) WhatsApp Intake - Case Confirmation and ETA
-
-<div align="center">
-  <img src="frontend/src/assets/pitch/whatsapp_case_confirmation_and_eta.png" alt="WhatsApp Case Confirmation and ETA" width="100%" />
-</div>
-
-After intake validation, the user receives case confirmation, case identifier, and an initial ETA estimate so they know the request is actively being processed.
-
-What this step provides:
-
-- Immediate case acknowledgment.
-- Human-readable case ID for traceability.
-- Early ETA visibility while orchestration continues in AEGIS.
-
-### 10) WhatsApp Intake - Real-Time Status Updates
-
-<div align="center">
-  <img src="frontend/src/assets/pitch/whatsapp_real_time_status_updates.png" alt="WhatsApp Real-Time Status Updates" width="100%" />
-</div>
-
-The final stage keeps the citizen informed with automatic progress updates from dispatch to arrival, aligned with command-center decisions.
-
-Operational value:
-
-- Reduces uncertainty during critical incidents.
-- Mirrors AEGIS dispatch status in a familiar channel.
-- Extends command-center transparency to end users.
 
 ## Overview
 
