@@ -9,6 +9,9 @@
 AEGIS is an intelligent emergency operations platform for dispatch, routing, patient triage, and decision support in real time.
 
 <p>
+  <a href="#the-problem">Problem</a> |
+  <a href="#what-happens-in-30-seconds">30s Flow</a> |
+  <a href="#business-outcomes">Outcomes</a> |
   <a href="#overview">Overview</a> |
   <a href="#product-preview">Preview</a> |
   <a href="#key-capabilities">Capabilities</a> |
@@ -48,6 +51,30 @@ AEGIS is an intelligent emergency operations platform for dispatch, routing, pat
 <div align="center">
   <img src="frontend/src/assets/pitch/Aegis%20Flow.png" alt="AEGIS Product Preview" width="100%" />
 </div>
+
+## The Problem
+
+Emergency response teams often lose critical minutes because incident intake, triage, routing, and status updates are fragmented across disconnected channels.
+
+AEGIS solves this by unifying citizen intake, AI-assisted decisioning, and command-center execution in one real-time operational flow.
+
+## What Happens In 30 Seconds
+
+1. A citizen reports an emergency via WhatsApp with location and case details.
+2. AEGIS acknowledges the case, generates a traceable case ID, and returns an initial ETA.
+3. The incident appears in the command center map with AI-assisted triage and routing context.
+4. AI agents evaluate risk, select resources, and produce an explainable dispatch decision.
+5. Operators track execution while the citizen receives real-time status updates.
+
+## Business Outcomes
+
+| Outcome | Why it matters |
+| --- | --- |
+| Faster dispatch decisions | Reduces time-to-action in high-pressure incidents. |
+| End-to-end traceability | Enables explainability, review, and governance readiness. |
+| Omnichannel intake | Supports both app/web and WhatsApp entry points. |
+| Operational visibility | Aligns citizen updates with command-center execution. |
+| Scalable architecture | Cloud-ready stack for pilots and production evolution. |
 
 ## Product Gallery
 
@@ -498,6 +525,12 @@ AEGIS is well positioned as a showcase for:
 2. Add screenshots for multiple pages, not just the main command center.
 3. Include sample request and response payloads for critical APIs.
 4. Add a testing and quality section.
+
+## Call To Action
+
+- Watch the end-to-end demo: [Product Demo Video](frontend/src/assets/pitch/Generaci%C3%B3n_de_Video_de_Introducci%C3%B3n_IA.mp4)
+- Review the executive brief: [AEGIS Mission Control PDF](frontend/src/assets/pitch/AEGIS_Mission_Control.pdf)
+- Explore visual architecture assets in the Architecture section above.
 
 ## Project Status
 
