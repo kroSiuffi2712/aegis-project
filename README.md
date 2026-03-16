@@ -394,6 +394,13 @@ The AEGIS platform is deployed on Microsoft Azure using a cloud-native architect
 | azmaps-aegis-dev | Azure Maps | Provides geospatial services to visualize incidents and ambulance locations. |
 | workspacegaegisdevbc30 | Azure Log Analytics | Collects logs and telemetry for monitoring, debugging, and system observability. |
 
+### Azure Resource Overview
+
+<div align="center">
+  <img src="frontend/src/assets/pitch/Azure-Resource-part1-subir.PNG" alt="Azure Resource Overview Part 1" width="49%" />
+  <img src="frontend/src/assets/pitch/Azure-Resource-part2-subir.PNG" alt="Azure Resource Overview Part 2" width="49%" />
+</div>
+
 
 
 ## Repository Layout
