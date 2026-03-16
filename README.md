@@ -30,7 +30,21 @@ AEGIS is a cloud-native multi-agent AI orchestrator platform for dispatch, routi
   <a href="#environment-variables">Environment</a>
 </p>
 
+<h3>Try AEGIS</h3>
+
 <p>
+  <a href="https://aegis-container-frontend.victoriouswater-f5bc7a58.eastus.azurecontainerapps.io">
+    <img src="https://img.shields.io/badge/Launch-Live%20Demo%20App-0052CC?style=for-the-badge&logo=microsoftedge&logoColor=white" alt="Launch Live Demo App" />
+  </a>
+  <a href="frontend/src/assets/pitch/muestra4.mp4">
+    <img src="https://img.shields.io/badge/Watch-Product%20Video-EA4335?style=for-the-badge&logo=youtube&logoColor=white" alt="Watch Product Video" />
+  </a>
+</p>
+
+<details>
+  <summary><strong>Technology Stack</strong></summary>
+  <br/>
+  <p>
   <a href="https://fastapi.tiangolo.com/">
     <img src="https://img.shields.io/badge/FastAPI-Backend-009688?style=for-the-badge&logo=fastapi&logoColor=white" alt="FastAPI" />
   </a>
@@ -61,13 +75,8 @@ AEGIS is a cloud-native multi-agent AI orchestrator platform for dispatch, routi
   <a href="https://www.docker.com/">
     <img src="https://img.shields.io/badge/Docker-Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker" />
   </a>
-</p>
-
-<p>
-  <a href="https://aegis-container-frontend.victoriouswater-f5bc7a58.eastus.azurecontainerapps.io">
-    <img src="https://img.shields.io/badge/Live-Demo%20App-0A84FF?style=for-the-badge&logo=microsoftedge&logoColor=white" alt="Live Demo App" />
-  </a>
-</p>
+  </p>
+</details>
 
 <p>
   <a href="frontend/src/assets/pitch/AEGIS_Mission_Control.pdf">
