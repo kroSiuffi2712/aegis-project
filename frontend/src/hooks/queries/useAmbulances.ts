@@ -7,7 +7,7 @@ export interface GetAmbulancesParams {
 }
 
 export const getAmbulances = async (params: GetAmbulancesParams): Promise<GetAmbulancesResponse> => {
-    const { data } = await api.get<GetAmbulancesResponse>("/ambulances/", {
+    const { data } = await api.get<GetAmbulancesResponse>("/ambulances", {
         params: {
             status: params.status ?? "available"
         }

@@ -21,6 +21,9 @@ services:
       args:
         VITE_API_URL: ${VITE_API_URL}
         VITE_AZURE_MAPS_KEY: ${VITE_AZURE_MAPS_KEY}
+        VITE_REDIRECT_URI: ${VITE_REDIRECT_URI}
+        VITE_AZURE_CLIENT_ID: ${VITE_AZURE_CLIENT_ID}
+        VITE_AZURE_TENANT_ID: ${VITE_AZURE_TENANT_ID}
     ports:
       - "${FRONTEND_PORT}:80"
     depends_on:

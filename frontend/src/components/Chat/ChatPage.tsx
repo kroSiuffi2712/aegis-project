@@ -397,7 +397,7 @@ const ChatPage: React.FC = () => {
                         suffix={
                             <div style={{ display: "flex", gap: 8 }}>
                                 <Tooltip title={isRecording ? "Pausar Dictado" : "Dictar"}>
-                                    <Button shape="circle" icon={<Mic size={18} />} onClick={toggle} />
+                                    <Button shape="circle" icon={<Mic size={18} />} onClick={toggle} disabled/>
                                 </Tooltip>
                                 <Tooltip title={isRecording ? "Pausar Voz" : "Modo Voz"}>
                                     <Button
@@ -405,6 +405,7 @@ const ChatPage: React.FC = () => {
                                         danger={isRecording}
                                         icon={isRecording ? <Pause size={18} /> : <AudioLines size={18} />}
                                         onClick={toggle}
+                                        disabled
                                     />
                                 </Tooltip>
                             </div>

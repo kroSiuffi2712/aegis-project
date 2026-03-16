@@ -21,7 +21,7 @@ export interface GetIncidentsParams {
 }
 
 export const getPatients = async (params: GetIncidentsParams): Promise<Patient[]> => {
-    const { data } = await api.get<Patient[]>("/patients/", {
+    const { data } = await api.get<Patient[]>("/patients", {
         params: {
             page: params.page,
             page_size: params.page_size ?? 20,
