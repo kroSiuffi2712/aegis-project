@@ -41,10 +41,9 @@ AEGIS is a cloud-native multi-agent AI orchestrator platform for dispatch, routi
   </a>
 </p>
 
-<details>
-  <summary><strong>Technology Stack</strong></summary>
-  <br/>
-  <p>
+<h3>Built With</h3>
+
+<p>
   <a href="https://fastapi.tiangolo.com/">
     <img src="https://img.shields.io/badge/FastAPI-Backend-009688?style=for-the-badge&logo=fastapi&logoColor=white" alt="FastAPI" />
   </a>
@@ -75,8 +74,7 @@ AEGIS is a cloud-native multi-agent AI orchestrator platform for dispatch, routi
   <a href="https://www.docker.com/">
     <img src="https://img.shields.io/badge/Docker-Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker" />
   </a>
-  </p>
-</details>
+</p>
 
 <p>
   <a href="frontend/src/assets/pitch/AEGIS_Mission_Control.pdf">
