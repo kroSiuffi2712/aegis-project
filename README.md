@@ -368,7 +368,7 @@ Visible endpoint groups from the main API entrypoint:
 | Backend | FastAPI, Uvicorn, Motor, Pydantic v2, python-dotenv |
 | AI | Semantic Kernel, OpenAI Chat Completion, Azure AI Search, RAG |
 | Data | MongoDB local or Azure Cosmos DB with Mongo compatibility |
-| Infra | Docker, Docker Compose, Nginx |
+| Observability | Azure Application Insights, Azure Monitor, Azure Log Analytics |
 
 ## Repository Layout
 
