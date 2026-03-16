@@ -357,7 +357,6 @@ Visible endpoint groups from the main API entrypoint:
 </div>
 
 <div align="center">
-  <img src="frontend/src/assets/pitch/aegis_intelligent_response_flow_architecture3.png" alt="AEGIS Intelligent Response Flow Architecture" width="49%" />
   <img src="frontend/src/assets/pitch/aegis_security_and_observability_architecture4.png" alt="AEGIS Security and Observability Architecture" width="49%" />
 </div>
 
