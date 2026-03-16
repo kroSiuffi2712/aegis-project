@@ -1,0 +1,81 @@
+title Aegis Security and Observability Architecture
+
+direction right
+
+Public Zone [icon: globe, color: red] {
+  Internet Users [icon: users]
+  WAF and Rate Limit [icon: shield, label: "WAF / Rate Limit"]
+  API Gateway [icon: nginx, label: "Nginx Gateway"]
+}
+
+App Zone [icon: server, color: blue] {
+  Frontend App [icon: react]
+  Backend API [icon: cloud]
+  Orchestrator Service [icon: workflow]
+  Agent Services [icon: cpu, label: "Triage/Dispatch/Strategy/Risk"]
+  Integration Adapters [icon: link]
+  Auth JWT Verification [icon: key, label: "AuthN/AuthZ"]
+  RBAC Policy [icon: lock, label: "RBAC"]
+}
+
+Data Zone [icon: database, color: green] {
+  Operational Database [icon: azure-cosmos-db]
+  Decision Trace Store [icon: database]
+  Key Vault [icon: azure-key-vault]
+  Audit Logs [icon: file-text]
+}
+
+Observability Zone [icon: activity, color: purple] {
+  Structured Logs [icon: file]
+  Distributed Tracing [icon: git-merge]
+  Metrics [icon: bar-chart]
+  Health Checks [icon: heartbeat]
+  Azure Monitor [icon: azure-monitor]
+  Application Insights [icon: azure-application-insights]
+  Alert Rules [icon: bell]
+  SLO Dashboard [icon: monitor]
+  Ops Incident Response [icon: message-circle]
+}
+
+Internet Users > WAF and Rate Limit: public traffic
+WAF and Rate Limit > API Gateway: policy enforcement
+API Gateway > Frontend App: public traffic
+Frontend App > Backend API: service-to-service
+Backend API > Auth JWT Verification: authN/authZ
+Backend API > RBAC Policy: policy enforcement
+Backend API > Orchestrator Service: service-to-service
+Orchestrator Service > Agent Services: service-to-service
+Agent Services > Integration Adapters: service-to-service
+
+Backend API > Operational Database: encrypted read/write
+Orchestrator Service > Decision Trace Store: audit trail
+Backend API > Key Vault: secret access
+Orchestrator Service > Key Vault: secret access
+Integration Adapters > Audit Logs: audit trail
+
+Frontend App --> Structured Logs: logs/traces/metrics
+Backend API --> Structured Logs: logs/traces/metrics
+Orchestrator Service --> Distributed Tracing: logs/traces/metrics
+Agent Services --> Distributed Tracing: logs/traces/metrics
+Backend API --> Metrics: logs/traces/metrics
+Agent Services --> Metrics: logs/traces/metrics
+Backend API --> Health Checks: health check
+Orchestrator Service --> Health Checks: health check
+
+Structured Logs > Azure Monitor: logs/traces/metrics
+Distributed Tracing > Application Insights: logs/traces/metrics
+Metrics > Azure Monitor: logs/traces/metrics
+Health Checks > Azure Monitor: logs/traces/metrics
+Azure Monitor > Alert Rules: SLO breach alert
+Application Insights > Alert Rules: SLO breach alert
+Alert Rules > SLO Dashboard: SLO breach alert
+Alert Rules > Ops Incident Response: incident response
+
+legend {
+  [color: red, label: "Public Zone"]
+  [color: blue, label: "App Zone"]
+  [color: green, label: "Data Zone"]
+  [color: purple, label: "Observability Zone"]
+  [connection: ">", label: "Direct protected flow"]
+  [connection: "-->", label: "Telemetry / async"]
+}

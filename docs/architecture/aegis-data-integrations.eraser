@@ -1,0 +1,87 @@
+title Aegis Data and Integrations Architecture
+
+direction right
+
+Domain Services [icon: layers, color: blue] {
+  Incident Service [icon: activity]
+  Patient Service [icon: heart]
+  Provider Service [icon: building]
+  Insurance Service [icon: shield]
+  Routing Service [icon: navigation]
+  Assessment Service [icon: clipboard]
+}
+
+AI and Orchestration [icon: cpu, color: indigo] {
+  Orchestrator Service [icon: workflow]
+  Emergency Triage Agent [icon: alert-circle]
+  Dispatch Agent [icon: truck]
+  RAG Service [icon: search]
+  Search Client [icon: azure-cognitive-search]
+  Kernel Engine [icon: terminal, label: "Semantic Kernel"]
+}
+
+Data Repositories [icon: database, color: green] {
+  Incident Repository [icon: database]
+  Decision Trace Repository [icon: database]
+  Patient Repository [icon: database]
+  Provider Repository [icon: database]
+  Insurance Repository [icon: database]
+  Zone Clinic Ambulance Repositories [icon: database, label: "Zone/Clinic/Ambulance Repos"]
+}
+
+Azure and External Integrations [icon: cloud, color: cyan] {
+  Azure OpenAI [icon: azure-openai]
+  Azure AI Search Index [icon: azure-cognitive-search]
+  Azure Maps [icon: azure-maps-accounts]
+  Provider External API [icon: globe]
+  Insurance External API [icon: globe]
+}
+
+Governance [icon: eye, color: purple] {
+  Observability Service [icon: activity]
+  Error Handler [icon: alert-triangle]
+  Azure Monitor [icon: azure-monitor]
+  Application Insights [icon: azure-application-insights]
+}
+
+Incident Service > Incident Repository: read/write
+Patient Service > Patient Repository: read/write
+Provider Service > Provider Repository: read/write
+Insurance Service > Insurance Repository: read/write
+Routing Service > Zone Clinic Ambulance Repositories: read/write
+Assessment Service > Incident Repository: read/write
+
+Orchestrator Service > Emergency Triage Agent: reasoning
+Orchestrator Service > Dispatch Agent: reasoning
+Orchestrator Service > RAG Service: retrieve context
+Orchestrator Service > Kernel Engine: prompt execution
+Orchestrator Service > Decision Trace Repository: audit trail
+Orchestrator Service > Incident Service: persist updates
+
+RAG Service > Search Client: retrieve context
+Search Client > Azure AI Search Index: retrieve context
+Kernel Engine > Azure OpenAI: reasoning
+Emergency Triage Agent > Azure OpenAI: reasoning
+Dispatch Agent > Azure Maps: route calculation
+Routing Service > Azure Maps: route calculation
+
+Provider Service > Provider External API: external validation
+Insurance Service > Insurance External API: external validation
+Provider External API > Provider Service: normalized response
+Insurance External API > Insurance Service: normalized response
+
+Incident Service > Orchestrator Service: feedback loop
+
+Incident Service --> Observability Service: trace/log
+Patient Service --> Observability Service: trace/log
+Provider Service --> Observability Service: trace/log
+Insurance Service --> Observability Service: trace/log
+Orchestrator Service --> Observability Service: trace/log
+Observability Service > Azure Monitor: telemetry
+Azure Monitor > Application Insights: telemetry
+Error Handler > Application Insights: trace/log
+
+legend {
+  [connection: ">", label: "Direct flow"]
+  [connection: "-->", label: "Telemetry / async"]
+}

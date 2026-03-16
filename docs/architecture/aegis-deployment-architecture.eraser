@@ -1,0 +1,125 @@
+title Aegis Deployment Architecture on Azure
+
+direction down
+
+// A) Source and Build
+Source and Build [icon: git-branch, color: gray] {
+  GitHub Repository [icon: github]
+  GitHub Actions [icon: github-actions]
+
+  Build Jobs [icon: package] {
+    Frontend Build [icon: react, label: "Frontend Build"]
+    Backend Build [icon: docker, label: "Backend Image"]
+    Test Suite [icon: check-circle, label: "Tests"]
+  }
+}
+
+Azure Container Registry [icon: azure-container-registries]
+
+// B) Deployment Targets
+Environments [icon: azure-subscriptions] {
+  Dev [color: gray, icon: code] {
+    Dev Front Door [icon: azure-front-door-and-cdn-profiles, label: "Front Door"]
+    Dev Frontend App [icon: azure-container-apps, label: "Frontend"]
+    Dev Backend API [icon: azure-container-apps, label: "Backend API"]
+  }
+
+  Staging [color: yellow, icon: layers] {
+    Staging Front Door [icon: azure-front-door-and-cdn-profiles, label: "Front Door"]
+    Staging Frontend App [icon: azure-container-apps, label: "Frontend"]
+    Staging Backend API [icon: azure-container-apps, label: "Backend API"]
+  }
+
+  Prod [color: green, icon: shield] {
+    Prod Front Door [icon: azure-front-door-and-cdn-profiles, label: "Front Door"]
+    Prod Frontend App [icon: azure-container-apps, label: "Frontend"]
+    Prod Backend API [icon: azure-container-apps, label: "Backend API"]
+    Previous Image Tag [icon: archive, label: "Previous Release"]
+  }
+}
+
+// C) Runtime Dependencies
+Runtime Services [icon: azure-resource-groups, color: blue] {
+  Azure OpenAI [icon: azure-openai]
+  Azure AI Search [icon: azure-cognitive-search]
+  Azure Maps [icon: azure-maps-accounts]
+  Operational Database [icon: azure-cosmos-db]
+  Key Vault [icon: azure-key-vault]
+}
+
+// D) Operations
+Operations [icon: azure-monitor, color: purple] {
+  Azure Monitor [icon: azure-monitor]
+  Application Insights [icon: azure-application-insights]
+  Alerts [icon: bell]
+  Ops Channel [icon: message-circle, label: "On-call / Ops"]
+}
+
+// Source and Build Connections
+GitHub Repository > GitHub Actions: commit/push
+GitHub Actions > Build Jobs: build & test
+Frontend Build > Azure Container Registry: publish image
+Backend Build > Azure Container Registry: publish image
+Test Suite > Azure Container Registry
+
+// Deployment Connections
+Azure Container Registry > Dev Frontend App: deploy release
+Azure Container Registry > Dev Backend API: deploy release
+Azure Container Registry > Staging Frontend App: deploy release
+Azure Container Registry > Staging Backend API: deploy release
+Azure Container Registry > Prod Frontend App: deploy release
+Azure Container Registry > Prod Backend API: deploy release
+
+// Rollback Path
+Previous Image Tag > Prod Backend API: rollback
+Previous Image Tag > Prod Frontend App: rollback
+Prod Backend API <-- Previous Image Tag: snapshot on deploy
+
+// Public Traffic Flow
+Dev Front Door > Dev Frontend App: public traffic
+Dev Frontend App > Dev Backend API: service-to-service
+Staging Front Door > Staging Frontend App: public traffic
+Staging Frontend App > Staging Backend API: service-to-service
+Prod Front Door > Prod Frontend App: public traffic
+Prod Frontend App > Prod Backend API: service-to-service
+
+// Runtime Dependencies
+Dev Backend API > Azure OpenAI: service-to-service
+Dev Backend API > Azure AI Search: service-to-service
+Dev Backend API > Azure Maps: service-to-service
+Dev Backend API > Operational Database: service-to-service
+Dev Backend API > Key Vault: secret retrieval
+
+Staging Backend API > Azure OpenAI: service-to-service
+Staging Backend API > Azure AI Search: service-to-service
+Staging Backend API > Azure Maps: service-to-service
+Staging Backend API > Operational Database: service-to-service
+Staging Backend API > Key Vault: secret retrieval
+
+Prod Backend API > Azure OpenAI: service-to-service
+Prod Backend API > Azure AI Search: service-to-service
+Prod Backend API > Azure Maps: service-to-service
+Prod Backend API > Operational Database: service-to-service
+Prod Backend API > Key Vault: secret retrieval
+
+// Operations Telemetry
+Dev Backend API --> Azure Monitor: telemetry & alerts
+Dev Frontend App --> Azure Monitor: telemetry & alerts
+Staging Backend API --> Azure Monitor: telemetry & alerts
+Staging Frontend App --> Azure Monitor: telemetry & alerts
+Prod Backend API --> Azure Monitor: telemetry & alerts
+Prod Frontend App --> Azure Monitor: telemetry & alerts
+Azure OpenAI --> Application Insights: telemetry & alerts
+Azure AI Search --> Application Insights: telemetry & alerts
+Operational Database --> Application Insights: telemetry & alerts
+Azure Monitor > Application Insights
+Application Insights > Alerts: telemetry & alerts
+Alerts > Ops Channel: telemetry & alerts
+
+legend {
+  [connection: ">", label: "Direct flow / deployment"]
+  [connection: "-->", label: "Async telemetry / snapshot"]
+  [color: gray, label: "Development environment"]
+  [color: yellow, label: "Staging environment"]
+  [color: green, label: "Production environment"]
+}
