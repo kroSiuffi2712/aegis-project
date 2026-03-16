@@ -370,6 +370,25 @@ Visible endpoint groups from the main API entrypoint:
 | Data | MongoDB local or Azure Cosmos DB with Mongo compatibility |
 | Observability | Azure Application Insights, Azure Monitor, Azure Log Analytics |
 
+
+## Cloud Infrastructure (Azure)
+
+The AEGIS platform is deployed on Microsoft Azure using a cloud-native architecture based on containerized services, AI capabilities, and managed cloud infrastructure.
+
+| Azure Resource | Service | Purpose |
+| --- | --- | --- |
+| aegis-container-frontend | Azure Container Apps | Hosts the React dashboard used by operators to visualize incidents and system activity. |
+| aegis-container-backend | Azure Container Apps | Runs the FastAPI backend responsible for coordinating AI agents and processing emergency incidents. |
+| managedEnvironment-rgaegisdev | Azure Container Apps Environment | Managed runtime environment where containerized services are executed and scaled. |
+| aegisregistrydev | Azure Container Registry | Stores Docker images used to deploy frontend and backend containers. |
+| aegis-openia-dev | Azure OpenAI Service | Provides the AI models used by the agents to analyze incidents and assist decision-making. |
+| ss-aegis-dev | Azure AI Search | Enables Retrieval-Augmented Generation (RAG) to provide contextual information to AI agents. |
+| aegis-mongo-cluster | Azure Cosmos DB (MongoDB API) | Stores incidents, agent decisions, and operational data. |
+| azmaps-aegis-dev | Azure Maps | Provides geospatial services to visualize incidents and ambulance locations. |
+| workspacegaegisdevbc30 | Azure Log Analytics | Collects logs and telemetry for monitoring, debugging, and system observability. |
+
+
+
 ## Repository Layout
 
 ```text
